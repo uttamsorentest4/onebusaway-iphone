@@ -19,6 +19,7 @@
 @import GoogleAnalytics;
 @import OBAKit;
 @import SVProgressHUD;
+#import <FirebaseCore/FirebaseCore.h>
 @import Fabric;
 @import Crashlytics;
 @import PMKCoreLocation;
@@ -43,6 +44,7 @@ static NSString * const OBALastRegionRefreshDateUserDefaultsKey = @"OBALastRegio
 @property(nonatomic,strong) id<OBAApplicationUI> applicationUI;
 @property(nonatomic,strong) OBADeepLinkRouter *deepLinkRouter;
 @property(nonatomic,strong) OnboardingViewController *onboardingViewController;
+@property(nonatomic,strong) OBAAnalytics *analytics;
 @end
 
 @implementation OBAApplicationDelegate
@@ -62,6 +64,7 @@ static NSString * const OBALastRegionRefreshDateUserDefaultsKey = @"OBALastRegio
         [self.application startWithConfiguration:configuration];
 
         self.application.regionHelper.delegate = self;
+        _analytics = [[OBAAnalytics alloc] initWithApplication:self.application];
     }
 
     return self;
@@ -70,7 +73,6 @@ static NSString * const OBALastRegionRefreshDateUserDefaultsKey = @"OBALastRegio
 - (void)_constructUI {
     self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
     self.window.backgroundColor = [UIColor whiteColor];
-
 
     BOOL showDrawer = [self.application.userDefaults boolForKey:OBAExperimentalUseDrawerUIDefaultsKey];
 
@@ -97,18 +99,9 @@ static NSString * const OBALastRegionRefreshDateUserDefaultsKey = @"OBALastRegio
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     [self initializeFabric];
+    [FIRApp configure];
 
     [[OBAPushManager pushManager] startWithLaunchOptions:launchOptions delegate:self APIKey:self.application.oneSignalAPIKey];
-
-    // Set up Google Analytics. User must be able to opt out of tracking.
-    id<GAITracker> tracker = [[GAI sharedInstance] trackerWithTrackingId:self.application.googleAnalyticsID];
-    BOOL optOut = ![OBAApplication.sharedApplication.userDefaults boolForKey:OBAOptInToTrackingDefaultsKey];
-    [GAI sharedInstance].optOut = optOut;
-    [GAI sharedInstance].trackUncaughtExceptions = YES;
-    [GAI sharedInstance].logger.logLevel = kGAILogLevelWarning;
-    [tracker set:[GAIFields customDimensionForIndex:1] value:self.application.modelDao.currentRegion.regionName];
-
-    [OBAAnalytics configureVoiceOverStatus];
 
     // On first launch, this refresh process should be deferred.
     if (!OBALocationManager.awaitingLocationAuthorization && [self hasEnoughTimeElapsedToRefreshRegions]) {
@@ -141,13 +134,8 @@ static NSString * const OBALastRegionRefreshDateUserDefaultsKey = @"OBALastRegio
 
     [self.applicationUI applicationDidBecomeActive];
 
-    [GAI sharedInstance].optOut = ![OBAApplication.sharedApplication.userDefaults boolForKey:OBAOptInToTrackingDefaultsKey];
-
-    NSString *label = [NSString stringWithFormat:@"API Region: %@", self.application.modelDao.currentRegion.regionName];
-
-    [OBAAnalytics reportEventWithCategory:OBAAnalyticsCategoryAppSettings action:@"configured_region" label:label value:nil];
-
-    [OBAAnalytics reportEventWithCategory:OBAAnalyticsCategoryAppSettings action:@"general" label:[NSString stringWithFormat:@"Set Region Automatically: %@", OBAStringFromBool(self.application.modelDao.automaticallySelectRegion)] value:nil];
+    [self.analytics refreshTrackingStatus];
+    [self.analytics refreshUserProperties];
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application {
@@ -438,7 +426,7 @@ static NSString * const OBALastRegionRefreshDateUserDefaultsKey = @"OBALastRegio
 - (void)initializeFabric {
     NSMutableArray *fabricKits = [[NSMutableArray alloc] initWithArray:@[Crashlytics.class]];
 
-    if ([OBAAnalytics OKToTrack]) {
+    if (self.analytics.OKToTrack) {
         [fabricKits addObject:Answers.class];
     }
 

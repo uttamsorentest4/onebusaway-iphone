@@ -13,43 +13,68 @@
  */
 
 #import "OBAAnalytics.h"
-@import OBAKit;
+#import <FirebaseAnalytics/FirebaseAnalytics.h>
 
 NSString * const OBAAnalyticsCategoryAppSettings = @"app_settings";
 NSString * const OBAAnalyticsCategoryUIAction = @"ui_action";
 NSString * const OBAAnalyticsCategoryAccessibility = @"accessibility";
 NSString * const OBAAnalyticsCategorySubmit = @"submit";
 
-NSString * const OBAAnalyticsDimensionOn = @"ON";
-NSString * const OBAAnalyticsDimensionOff = @"OFF";
-
 NSInteger const OBAAnalyticsDimensionVoiceOver = 4;
+
+@interface OBAAnalytics ()
+@property(nonatomic,strong) OBAApplication *application;
+@end
 
 @implementation OBAAnalytics
 
-+ (BOOL)OKToTrack {
-    return [OBAApplication.sharedApplication.userDefaults boolForKey:OBAOptInToTrackingDefaultsKey];
+- (instancetype)initWithApplication:(OBAApplication*)application {
+    self = [super init];
+
+    if (self) {
+        _application = application;
+        [GAI sharedInstance].logger.logLevel = kGAILogLevelWarning;
+
+        // the default tracker is set to be the first tracker created.
+        [GAI.sharedInstance trackerWithTrackingId:_application.googleAnalyticsID];
+
+        [self refreshTrackingStatus];
+        [self refreshUserProperties];
+    }
+    return self;
 }
 
-+ (void)configureVoiceOverStatus {
-    if (UIAccessibilityIsVoiceOverRunning()) {
-        [[GAI sharedInstance].defaultTracker set:[GAIFields customDimensionForIndex:OBAAnalyticsDimensionVoiceOver] value:OBAAnalyticsDimensionOn];
-    } else {
-        [[GAI sharedInstance].defaultTracker set:[GAIFields customDimensionForIndex:OBAAnalyticsDimensionVoiceOver] value:OBAAnalyticsDimensionOff];
-    }
+- (void)refreshTrackingStatus {
+    [GAI sharedInstance].optOut = !self.OKToTrack;
+    [[FIRAnalyticsConfiguration sharedInstance] setAnalyticsCollectionEnabled:self.OKToTrack];
+}
+
+- (BOOL)OKToTrack {
+    return [self.application.userDefaults boolForKey:OBAOptInToTrackingDefaultsKey];
+}
+
+- (void)refreshUserProperties {
+    [[GAI sharedInstance].defaultTracker set:[GAIFields customDimensionForIndex:1] value:self.application.modelDao.currentRegion.regionName];
+
+    [FIRAnalytics setUserPropertyString:OBAStringFromBool(UIAccessibilityIsVoiceOverRunning()) forName:@"UsesVoiceOver"];
+    [FIRAnalytics setUserPropertyString:OBAStringFromBool([OBATheme useHighContrastUI]) forName:@"UsesHighContrastUI"];
+
+    [[GAI sharedInstance].defaultTracker set:[GAIFields customDimensionForIndex:OBAAnalyticsDimensionVoiceOver] value:(UIAccessibilityIsVoiceOverRunning() ? @"ON" : @"OFF")];
 }
 
 + (void)reportEventWithCategory:(NSString *)category action:(NSString*)action label:(NSString*)label value:(id)value {
+    NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
+    if (label && value) {
+        params[label] = value;
+    }
+    [FIRAnalytics logEventWithName:[NSString stringWithFormat:@"%@_%@", category, action] parameters:params];
+
     [[GAI sharedInstance].defaultTracker send:[[GAIDictionaryBuilder createEventWithCategory:category action:action label:label value:value] build]];
 }
 
-+ (void)reportScreenView:(NSString *)label {
-    [[GAI sharedInstance].defaultTracker set:kGAIScreenName value:label];
-    [[GAI sharedInstance].defaultTracker send:[[GAIDictionaryBuilder createScreenView] build]];
-}
-
 + (void)reportViewController:(UIViewController*)viewController {
-    [self reportScreenView:[NSString stringWithFormat:@"View: %@", viewController.class]];
+    // FIRAnalytics automatically tracks this.
+    [[GAI sharedInstance].defaultTracker send:[[GAIDictionaryBuilder createScreenView] build]];
 }
 
 @end
