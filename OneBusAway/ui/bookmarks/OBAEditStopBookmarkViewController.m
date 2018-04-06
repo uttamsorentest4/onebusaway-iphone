@@ -21,10 +21,12 @@
 @import OBAKit;
 #import "OneBusAway-Swift.h"
 
+static NSString * const kBookmarkNameKey = @"BookmarkNameKey";
+
 @interface OBAEditStopBookmarkViewController ()
-@property(nonatomic,strong) OBABookmarkV2 *bookmark;
+@property(nonatomic,copy) OBABookmarkV2 *bookmark;
 @property(nonatomic,strong) OBABookmarkGroup *selectedGroup;
-@property(nonatomic,strong) UITextField *textField;
+@property(nonatomic,strong) NSMutableDictionary *fieldData;
 @end
 
 @implementation OBAEditStopBookmarkViewController
@@ -33,10 +35,8 @@
     self = [super init];
 
     if (self) {
-        self.tableView.scrollEnabled = NO;
-
-        _bookmark = bookmark;
-        _selectedGroup = _bookmark.group;
+        _bookmark = [bookmark copy];
+        _selectedGroup = [_bookmark.group copy];
 
         self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancel:)];
         self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSave target:self action:@selector(save:)];
@@ -46,17 +46,20 @@
     return self;
 }
 
-#pragma mark - UIViewController
-
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-    self.tableView.tableFooterView = [UIView new];
+    [self loadData];
 }
 
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-    [self.tableView reloadData];
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+
+    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:0];
+    UITableViewCell<OBATableCell> *cell = (UITableViewCell<OBATableCell> *)[self.tableView cellForRowAtIndexPath:indexPath];
+    if ([cell.tableRow.dataKey isEqual:kBookmarkNameKey]) {
+        [((OBATextFieldCell*)cell).textField becomeFirstResponder];
+    }
 }
 
 #pragma mark - Lazy Loading
@@ -75,50 +78,57 @@
     return _modelService;
 }
 
-#pragma mark - UITableView
+#pragma mark - Table Data
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return 2;
-}
+//- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+//    if (indexPath.row == 1) {
+//        OBABookmarkGroupsViewController *groups = [[OBABookmarkGroupsViewController alloc] init];
+//        groups.enableGroupEditing = NO;
+//        groups.delegate = self;
+//        UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:groups];
+//
+//        // Sometimes cannot edit the name of a bookmark when creating it
+//        // see #933
+//        [self.view endEditing:YES];
+//        self.bookmark.name = self.textField.text;
+//
+//        [self presentViewController:nav animated:YES completion:nil];
+//    }
+//}
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (indexPath.row == 0) {
-        OBATextFieldTableViewCell *cell =  [OBATextFieldTableViewCell getOrCreateCellForTableView:tableView];
-        cell.textField.text = _bookmark.name;
-        self.textField = cell.textField;
-        [self.textField becomeFirstResponder];
-        [tableView addSubview:cell]; // make keyboard slide in/out from right.
-        return cell;
-    }
-    else {
-        UITableViewCell *cell = [UITableViewCell getOrCreateCellForTableView:tableView cellId:@"BookmarkGroupCell"];
-        NSString *groupName = @"None";
+- (void)loadData {
+    OBATextFieldRow *nameRow = [[OBATextFieldRow alloc] initWithLabelText:nil textFieldText:self.bookmark.name];
+    nameRow.dataKey = kBookmarkNameKey;
+    OBATableSection *nameSection = [[OBATableSection alloc] initWithTitle:@"Bookmark name" rows:@[nameRow]];
 
-        if (self.selectedGroup) {
-            groupName = self.selectedGroup.name;
+    OBATableSection *groupsSection = [[OBATableSection alloc] initWithTitle:@"Select a Group" rows:nil];
+    for (OBABookmarkGroup *group in self.modelDAO.bookmarkGroups) {
+        OBATableRow *tableRow = [[OBATableRow alloc] initWithTitle:group.name action:^(OBABaseRow *row) {
+            self.selectedGroup = group;
+            [self loadData];
+        }];
+
+        if ([self.selectedGroup.UUID isEqual:group.UUID]) {
+            tableRow.accessoryType = UITableViewCellAccessoryCheckmark;
+        }
+        else {
+            tableRow.accessoryType = UITableViewCellAccessoryNone;
         }
 
-        cell.textLabel.text = [NSString stringWithFormat:@"Set Group: %@", groupName];
-        cell.textLabel.textColor = [UIColor darkGrayColor];
-        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-        return cell;
+        [groupsSection addRow:tableRow];
     }
-}
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (indexPath.row == 1) {
-        OBABookmarkGroupsViewController *groups = [[OBABookmarkGroupsViewController alloc] init];
-        groups.enableGroupEditing = NO;
-        groups.delegate = self;
-        UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:groups];
-        
-        // Sometimes cannot edit the name of a bookmark when creating it
-        // see #933
-        [self.view endEditing:YES];
-        self.bookmark.name = self.textField.text;
-        
-        [self presentViewController:nav animated:YES completion:nil];
+    OBATableRow *noGroupRow = [[OBATableRow alloc] initWithTitle:@"(none)" action:^(OBABaseRow *row) {
+        self.selectedGroup = nil;
+        [self loadData];
+    }];
+    [groupsSection addRow:noGroupRow];
+    if (!self.selectedGroup) {
+        noGroupRow.accessoryType = UITableViewCellAccessoryCheckmark;
     }
+
+    self.sections = @[nameSection, groupsSection];
+    [self.tableView reloadData];
 }
 
 - (void)didSetBookmarkGroup:(OBABookmarkGroup *)group {
@@ -135,7 +145,7 @@
 - (void)save:(id)sender {
     [self.view endEditing:YES];
 
-    self.bookmark.name = self.textField.text;
+    self.bookmark.name = self.fieldData[kBookmarkNameKey];
 
     if (![self.bookmark isValidModel]) {
         [AlertPresenter showWarning:NSLocalizedString(@"msg_cant_create_bookmark", @"Title of the alert shown when a bookmark can't be created") body:NSLocalizedString(@"msg_alert_bookmarks_must_have_name", @"Body of the alert shown when a bookmark can't be created.")];

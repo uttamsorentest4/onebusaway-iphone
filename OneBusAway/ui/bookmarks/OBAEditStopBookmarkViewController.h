@@ -15,14 +15,13 @@
  */
 
 @import OBAKit;
-#import "OBABookmarkGroupsViewController.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface OBAEditStopBookmarkViewController : UITableViewController <OBABookmarkGroupVCDelegate>
+@interface OBAEditStopBookmarkViewController : OBAStaticTableViewController
 @property(nonatomic,strong) OBAModelDAO *modelDAO;
 @property(nonatomic,strong) OBAModelService *modelService;
-- (instancetype)initWithBookmark:(OBABookmarkV2 *)bookmark;
+- (instancetype)initWithBookmark:(nullable OBABookmarkV2 *)bookmark;
 @end
 
 NS_ASSUME_NONNULL_END
