@@ -191,6 +191,7 @@
 		93BC49ED1FB8D628008B710D /* GoogleAnalytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 93BC49EB1FB8D628008B710D /* GoogleAnalytics.framework */; };
 		93C3936B1D8A3A4D0080F370 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 93C3936A1D8A3A4D0080F370 /* UIKit.framework */; };
 		93C3936D1D8A3A530080F370 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 93C3936C1D8A3A530080F370 /* Foundation.framework */; };
+		93C48E492096EF0F001FB95C /* MapTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93C48E482096EF0F001FB95C /* MapTableViewController.swift */; };
 		93F3F88E1E7A7B2D0025FC78 /* RegionalAlertsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93F3F88D1E7A7B2D0025FC78 /* RegionalAlertsViewController.swift */; };
 		93F3F8971E7AEE560025FC78 /* Mantle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 93F3F8961E7AEE560025FC78 /* Mantle.framework */; };
 		93F3F89F1E7BAC510025FC78 /* OBARegionalAlert_Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = 93F3F89E1E7BAC510025FC78 /* OBARegionalAlert_Tests.m */; };
@@ -539,6 +540,7 @@
 		93BC49EB1FB8D628008B710D /* GoogleAnalytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GoogleAnalytics.framework; path = Carthage/Build/iOS/GoogleAnalytics.framework; sourceTree = "<group>"; };
 		93C3936A1D8A3A4D0080F370 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		93C3936C1D8A3A530080F370 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		93C48E482096EF0F001FB95C /* MapTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapTableViewController.swift; sourceTree = "<group>"; };
 		93E4A7611CE65B2100E769B0 /* atlanta.gpx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = atlanta.gpx; sourceTree = "<group>"; };
 		93F3F88D1E7A7B2D0025FC78 /* RegionalAlertsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RegionalAlertsViewController.swift; sourceTree = "<group>"; };
 		93F3F8961E7AEE560025FC78 /* Mantle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Mantle.framework; path = Carthage/Build/iOS/Mantle.framework; sourceTree = "<group>"; };
@@ -1396,6 +1398,7 @@
 				93B781AA1E64BAC900F2C38D /* OBAMapViewController.m */,
 				93876DF91E68AD3900B4343F /* OBAMapAnnotationViewBuilder.h */,
 				93876DFA1E68AD3900B4343F /* OBAMapAnnotationViewBuilder.m */,
+				93C48E482096EF0F001FB95C /* MapTableViewController.swift */,
 			);
 			path = map;
 			sourceTree = "<group>";
@@ -1757,6 +1760,7 @@
 				9364DC552033630C00F857E9 /* UIView+constrainToParent.swift in Sources */,
 				934197BD1DB0C140004BBBB7 /* OBATripScheduleSectionBuilder.m in Sources */,
 				930AFE961DD11ECB0092AE82 /* OBAWalkableRow.m in Sources */,
+				93C48E492096EF0F001FB95C /* MapTableViewController.swift in Sources */,
 				934197961DB0C140004BBBB7 /* OBAStaticTableViewController+Builders.m in Sources */,
 				9327DEF91E023BD400502F06 /* OBAArrivalDepartureRow.m in Sources */,
 				9364DC532033630C00F857E9 /* PulleyPassthroughScrollView.swift in Sources */,
@@ -1934,7 +1938,7 @@
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_MULTIPLE_DEFINITION_TYPES_FOR_SELECTOR = NO;
 				INFOPLIST_FILE = "$(SRCROOT)/OneBusAway/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1981,7 +1985,7 @@
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_MULTIPLE_DEFINITION_TYPES_FOR_SELECTOR = NO;
 				INFOPLIST_FILE = "$(SRCROOT)/OneBusAway/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2229,7 +2233,7 @@
 				);
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				INFOPLIST_FILE = "OneBusAway Today/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				MTL_ENABLE_DEBUG_INFO = YES;
 				OTHER_LDFLAGS = "";
@@ -2269,7 +2273,7 @@
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				INFOPLIST_FILE = "OneBusAway Today/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				OTHER_LDFLAGS = "";
@@ -2309,7 +2313,7 @@
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				INFOPLIST_FILE = "OneBusAway Today/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				OTHER_LDFLAGS = "";
@@ -2349,7 +2353,7 @@
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				INFOPLIST_FILE = "OneBusAway Today/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				OTHER_LDFLAGS = "";
@@ -2584,7 +2588,7 @@
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_MULTIPLE_DEFINITION_TYPES_FOR_SELECTOR = NO;
 				INFOPLIST_FILE = "$(SRCROOT)/OneBusAway/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2695,7 +2699,7 @@
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_MULTIPLE_DEFINITION_TYPES_FOR_SELECTOR = NO;
 				INFOPLIST_FILE = "$(SRCROOT)/OneBusAway/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",

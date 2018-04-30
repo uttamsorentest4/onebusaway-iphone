@@ -20,6 +20,7 @@ INIT_NIB_UNAVAILABLE;
 @property(nonatomic,copy,readonly) NSString *stopID;
 @property(nonatomic,assign) NSUInteger minutesBefore;
 @property(nonatomic,assign) NSUInteger minutesAfter;
+@property(nonatomic,assign) BOOL displaysHeaderMap;
 
 - (instancetype)initWithStopID:(NSString*)stopID NS_DESIGNATED_INITIALIZER;
 

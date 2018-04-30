@@ -65,6 +65,7 @@ static NSUInteger const kDefaultMinutesAfter = 35;
         _stopID = [stopID copy];
         _minutesBefore = kDefaultMinutesBefore;
         _minutesAfter = kDefaultMinutesAfter;
+        _displaysHeaderMap = YES;
     }
     return self;
 }
@@ -86,7 +87,9 @@ static NSUInteger const kDefaultMinutesAfter = 35;
 
     self.navigationItem.title = NSLocalizedString(@"stop_view_controller.stop_back_title", @"Back button title representing going back to the stop controller.");
 
-    [self createTableHeaderView];
+    if (self.displaysHeaderMap) {
+        [self createTableHeaderView];
+    }
 
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(reloadData:)];
     self.refreshControl = [[UIRefreshControl alloc] init];

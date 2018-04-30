@@ -595,13 +595,7 @@ static const double kStopsInRegionRefreshDelayOnDrag = 0.1;
 
 - (void)displayStopControllerForStopID:(NSString*)stopID {
     OBAStopViewController *stopController = [[OBAStopViewController alloc] initWithStopID:stopID];
-
-    if ([self usingDrawerUI]) {
-        [self.drawerPresenter pushViewController:stopController animated:YES];
-    }
-    else {
-        [self.navigationController pushViewController:stopController animated:YES];
-    }
+    [self.navigationController pushViewController:stopController animated:YES];
 }
 
 #pragma mark - OBAMapViewController Private Methods
