@@ -33,20 +33,11 @@ class MapTableViewController: UIViewController {
     lazy var mapContainer: UIView = {
         let view = UIView.init(frame: self.view.bounds)
         view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        view.backgroundColor = OBATheme.mapTableBackgroundColor
-        view.addSubview(mapView)
-
+        view.backgroundColor = UIColor.magenta //OBATheme.mapTableBackgroundColor
         return view
     }()
 
-    lazy var mapView: MKMapView = {
-        let map = MKMapView.init(frame: view.bounds)
-        map.register(MKPinAnnotationView.self, forAnnotationViewWithReuseIdentifier: MKMapViewDefaultAnnotationViewReuseIdentifier)
-        map.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        map.showsUserLocation = (CLLocationManager.authorizationStatus() == .authorizedWhenInUse)
-        map.delegate = self
-        return map
-    }()
+    var mapController: OBAMapViewController
 
     var application: OBAApplication
     var locationManager: OBALocationManager
@@ -60,6 +51,7 @@ class MapTableViewController: UIViewController {
         self.mapDataLoader = application.mapDataLoader
         self.mapRegionManager = application.mapRegionManager
         self.modelDAO = application.modelDao
+        self.mapController = OBAMapViewController.init(mapDataLoader: self.mapDataLoader, mapRegionManager: self.mapRegionManager)
 
         super.init(nibName: nil, bundle: nil)
 
@@ -82,6 +74,8 @@ class MapTableViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        oba_addChildViewController(mapController, to: mapContainer)
+
         registerCells(with: collectionView)
         view.addSubview(collectionView)
     }
@@ -95,18 +89,7 @@ class MapTableViewController: UIViewController {
 // MARK: - Scroll Delegate
 extension MapTableViewController : UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-
-//        let contentBottom = tableView.contentSize
-
-        var viewHeight = mapContainer.frame.height
-        viewHeight = viewHeight - 150
-
-        var mapFrame = mapView.frame
-        mapFrame.size.height = viewHeight
-        mapView.frame = mapFrame
-
-//        print("Offset: \(scrollView.contentOffset)")
-//        print("Size: \(scrollView.contentSize)")
+        // TODO.
     }
 }
 
@@ -156,12 +139,13 @@ extension MapTableViewController: OBAMapRegionDelegate {
 // MARK: - Navigation Target Aware
 extension MapTableViewController: OBANavigationTargetAware {
     func navigationTarget() -> OBANavigationTarget {
-        if mapDataLoader.searchType == .region {
-            return OBANavigationTarget.init(forSearchLocationRegion: mapView.region)
-        }
-        else {
-            return mapDataLoader.searchTarget
-        }
+        return mapDataLoader.searchTarget
+//        if mapDataLoader.searchType == .region {
+//            return OBANavigationTarget.init(forSearchLocationRegion: mapView.region)
+//        }
+//        else {
+//            return mapDataLoader.searchTarget
+//        }
     }
 }
 
@@ -178,6 +162,8 @@ extension MapTableViewController: MKMapViewDelegate {
         return view
     }
 }
+
+
 
 // MARK: - Collection View
 extension MapTableViewController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
