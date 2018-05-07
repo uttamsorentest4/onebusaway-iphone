@@ -16,8 +16,13 @@ import OBAKit
     // MARK: - Map Tab
     var mapController: MapTableViewController
     var mapNavigationController: UINavigationController
+
     var nearbyStopsController: NearbyStopsViewController
     var nearbyStopsNavigation: UINavigationController
+
+    var oldMapController: OBAMapViewController
+    var oldMapNav: UINavigationController
+
 
     // MARK: - Recents Tab
     let recentsController = OBARecentStopsViewController.init()
@@ -41,15 +46,18 @@ import OBAKit
     required init(application: OBAApplication) {
         self.application = application
 
-        mapController = MapTableViewController.init(mapDataLoader: application.mapDataLoader, mapRegionManager: application.mapRegionManager)
+        mapController = MapTableViewController.init(application: application)
         mapNavigationController = UINavigationController.init(rootViewController: mapController)
+
+        oldMapController = OBAMapViewController.init(mapDataLoader: application.mapDataLoader, mapRegionManager: application.mapRegionManager)
+        oldMapNav = UINavigationController.init(rootViewController: oldMapController)
 
         nearbyStopsController = NearbyStopsViewController.init(mapDataLoader: application.mapDataLoader, mapRegionManager: application.mapRegionManager)
         nearbyStopsNavigation = UINavigationController.init(rootViewController: nearbyStopsController)
 
         super.init()
 
-        tabBarController.viewControllers = [mapNavigationController, recentsNavigation, bookmarksNavigation, infoNavigation]
+        tabBarController.viewControllers = [mapNavigationController, oldMapNav, recentsNavigation, bookmarksNavigation, infoNavigation]
         tabBarController.delegate = self
     }
 }

@@ -11,32 +11,55 @@ import MapKit
 
 class MapTableViewController: UIViewController {
 
-    lazy var tableView: UITableView = {
-        let table = UITableView.init(frame: self.view.bounds)
-        table.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        table.dataSource = self
-        table.delegate = self
-        table.backgroundView = mapView
-        table.contentInset = UIEdgeInsetsMake(320, 0, 0, 0)
-        table.showsVerticalScrollIndicator = false
-        table.tableFooterView = UIView.init()
-        return table
+    let identifier = "CellIdentifier"
+
+    lazy var layout: UICollectionViewFlowLayout = {
+        let flowLayout = UICollectionViewFlowLayout.init()
+        return flowLayout
+    }()
+
+    lazy var collectionView: UICollectionView = {
+        let coll = UICollectionView.init(frame: view.bounds, collectionViewLayout: layout)
+        coll.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        coll.dataSource = self
+        coll.delegate = self
+        coll.backgroundView = mapContainer
+        coll.contentInset = UIEdgeInsetsMake(320, 0, 0, 0)
+        coll.showsVerticalScrollIndicator = false
+        coll.backgroundColor = OBATheme.mapTableBackgroundColor
+        return coll
+    }()
+
+    lazy var mapContainer: UIView = {
+        let view = UIView.init(frame: self.view.bounds)
+        view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        view.backgroundColor = OBATheme.mapTableBackgroundColor
+        view.addSubview(mapView)
+
+        return view
     }()
 
     lazy var mapView: MKMapView = {
         let map = MKMapView.init(frame: view.bounds)
         map.register(MKPinAnnotationView.self, forAnnotationViewWithReuseIdentifier: MKMapViewDefaultAnnotationViewReuseIdentifier)
         map.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        map.showsUserLocation = (CLLocationManager.authorizationStatus() == .authorizedWhenInUse)
         map.delegate = self
         return map
     }()
 
+    var application: OBAApplication
+    var locationManager: OBALocationManager
     var mapDataLoader: OBAMapDataLoader
     var mapRegionManager: OBAMapRegionManager
+    var modelDAO: OBAModelDAO
 
-    init(mapDataLoader: OBAMapDataLoader, mapRegionManager: OBAMapRegionManager) {
-        self.mapDataLoader = mapDataLoader
-        self.mapRegionManager = mapRegionManager
+    init(application: OBAApplication) {
+        self.application = application
+        self.locationManager = application.locationManager
+        self.mapDataLoader = application.mapDataLoader
+        self.mapRegionManager = application.mapRegionManager
+        self.modelDAO = application.modelDao
 
         super.init(nibName: nil, bundle: nil)
 
@@ -48,6 +71,10 @@ class MapTableViewController: UIViewController {
         self.tabBarItem.selectedImage = UIImage.init(named: "Map_Selected")
     }
 
+    deinit {
+        self.mapDataLoader.cancelOpenConnections()
+    }
+
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -55,11 +82,52 @@ class MapTableViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: NSStringFromClass(UITableViewCell.self))
-        view.addSubview(tableView)
+        registerCells(with: collectionView)
+        view.addSubview(collectionView)
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        refreshCurrentLocation()
     }
 }
 
+// MARK: - Scroll Delegate
+extension MapTableViewController : UIScrollViewDelegate {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+
+//        let contentBottom = tableView.contentSize
+
+        var viewHeight = mapContainer.frame.height
+        viewHeight = viewHeight - 150
+
+        var mapFrame = mapView.frame
+        mapFrame.size.height = viewHeight
+        mapView.frame = mapFrame
+
+//        print("Offset: \(scrollView.contentOffset)")
+//        print("Size: \(scrollView.contentSize)")
+    }
+}
+
+// MARK: - Location Management
+extension MapTableViewController {
+    private func refreshCurrentLocation() {
+        if let location = locationManager.currentLocation {
+            if mapRegionManager.lastRegionChangeWasProgrammatic {
+                let radius = max(location.horizontalAccuracy, OBAMinMapRadiusInMeters)
+                let region = OBASphericalGeometryLibrary.createRegion(withCenter: location.coordinate, latRadius: radius, lonRadius: radius)
+                mapRegionManager.setRegion(region, changeWasProgrammatic: true)
+            }
+        }
+        else if let region = modelDAO.currentRegion {
+            let coordinateRegion = MKCoordinateRegionForMapRect(region.serviceRect)
+            mapRegionManager.setRegion(coordinateRegion, changeWasProgrammatic: true)
+        }
+    }
+}
+
+// MARK: - Map Data Loader
 extension MapTableViewController: OBAMapDataLoaderDelegate {
     func mapDataLoaderFinishedUpdating(_ mapDataLoader: OBAMapDataLoader) {
         //
@@ -78,12 +146,14 @@ extension MapTableViewController: OBAMapDataLoaderDelegate {
     }
 }
 
+// MARK: - Map Region Delegate
 extension MapTableViewController: OBAMapRegionDelegate {
     func mapRegionManager(_ manager: OBAMapRegionManager, setRegion region: MKCoordinateRegion, animated: Bool) {
         //
     }
 }
 
+// MARK: - Navigation Target Aware
 extension MapTableViewController: OBANavigationTargetAware {
     func navigationTarget() -> OBANavigationTarget {
         if mapDataLoader.searchType == .region {
@@ -95,6 +165,7 @@ extension MapTableViewController: OBANavigationTargetAware {
     }
 }
 
+// MARK: - Map Delegate
 extension MapTableViewController: MKMapViewDelegate {
     public func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
 
@@ -108,14 +179,52 @@ extension MapTableViewController: MKMapViewDelegate {
     }
 }
 
-extension MapTableViewController: UITableViewDataSource, UITableViewDelegate {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 5
+// MARK: - Collection View
+extension MapTableViewController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
+
+    class CollectionViewCell: UICollectionViewCell {
+        let textLabel = UILabel.init()
+
+        override init(frame: CGRect) {
+            super.init(frame: frame)
+
+            contentView.backgroundColor = OBATheme.mapTableBackgroundColor
+
+            textLabel.frame = contentView.bounds
+            textLabel.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+            contentView.addSubview(textLabel)
+        }
+
+        required init?(coder aDecoder: NSCoder) {
+            fatalError("init(coder:) has not been implemented")
+        }
     }
 
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: NSStringFromClass(UITableViewCell.self), for: indexPath)
-        cell.textLabel?.text = "Row \(indexPath.row + 1)"
+    func registerCells(with collectionView: UICollectionView) {
+        collectionView.register(CollectionViewCell.self, forCellWithReuseIdentifier: identifier)
+    }
+
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
+        return 1
+    }
+
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return 10
+    }
+
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: identifier, for: indexPath) as! CollectionViewCell
+        cell.textLabel.text = indexPath.description
+
         return cell
     }
+
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize(width: collectionView.frame.width, height: 44)
+    }
+
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+        return 0
+    }
+
 }

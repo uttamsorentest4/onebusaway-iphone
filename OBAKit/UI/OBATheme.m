@@ -161,6 +161,10 @@ static UIFont *_italicFootnoteFont = nil;
 
 #pragma mark - Colors
 
++ (UIColor*)mapTableBackgroundColor {
+    return [self colorWithRed:250 green:250 blue:250 alpha:1.f];
+}
+
 + (BOOL)useHighContrastUI {
     return UIAccessibilityDarkerSystemColorsEnabled() || UIAccessibilityIsReduceTransparencyEnabled();
 }
