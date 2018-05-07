@@ -184,7 +184,7 @@ extension MapTableViewController: UICollectionViewDataSource, UICollectionViewDe
         override init(frame: CGRect) {
             super.init(frame: frame)
 
-            contentView.backgroundColor = OBATheme.mapTableBackgroundColor
+            contentView.backgroundColor = UIColor.white
 
             textLabel.frame = contentView.bounds
             textLabel.autoresizingMask = [.flexibleWidth, .flexibleHeight]
