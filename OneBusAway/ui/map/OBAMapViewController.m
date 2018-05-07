@@ -71,6 +71,8 @@ static const double kStopsInRegionRefreshDelayOnDrag = 0.1;
     self = [super initWithNibName:nil bundle:nil];
 
     if (self) {
+        _standaloneMode = YES;
+
         _mapDataLoader = mapDataLoader;
         [_mapDataLoader addDelegate:self];
 
@@ -118,8 +120,11 @@ static const double kStopsInRegionRefreshDelayOnDrag = 0.1;
         self.mapView.showsUserLocation = YES;
     }
 
-    [self createLocationHoverBar];
-    [self createSecondaryHoverBar];
+    if (self.standaloneMode) {
+        [self createLocationHoverBar];
+        [self createSecondaryHoverBar];
+        [self configureSearch];
+    }
 
     self.hideFutureNetworkErrors = NO;
 
@@ -131,8 +136,6 @@ static const double kStopsInRegionRefreshDelayOnDrag = 0.1;
     }
 
     [self configureToastView];
-
-    [self configureSearch];
 
     [self reloadData];
 }

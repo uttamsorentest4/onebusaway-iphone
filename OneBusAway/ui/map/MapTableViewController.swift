@@ -11,14 +11,14 @@ import MapKit
 
 class MapTableViewController: UIViewController {
 
-    let identifier = "CellIdentifier"
+    private let identifier = "CellIdentifier"
 
-    lazy var layout: UICollectionViewFlowLayout = {
+    private lazy var layout: UICollectionViewFlowLayout = {
         let flowLayout = UICollectionViewFlowLayout.init()
         return flowLayout
     }()
 
-    lazy var collectionView: UICollectionView = {
+    private lazy var collectionView: UICollectionView = {
         let coll = UICollectionView.init(frame: view.bounds, collectionViewLayout: layout)
         coll.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         coll.dataSource = self
@@ -30,12 +30,14 @@ class MapTableViewController: UIViewController {
         return coll
     }()
 
-    lazy var mapContainer: UIView = {
+    private lazy var mapContainer: UIView = {
         let view = UIView.init(frame: self.view.bounds)
         view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.backgroundColor = UIColor.magenta //OBATheme.mapTableBackgroundColor
         return view
     }()
+
+    private var stops: [OBAStopV2] = []
 
     var mapController: OBAMapViewController
 
@@ -51,7 +53,9 @@ class MapTableViewController: UIViewController {
         self.mapDataLoader = application.mapDataLoader
         self.mapRegionManager = application.mapRegionManager
         self.modelDAO = application.modelDao
+
         self.mapController = OBAMapViewController.init(mapDataLoader: self.mapDataLoader, mapRegionManager: self.mapRegionManager)
+        self.mapController.standaloneMode = false
 
         super.init(nibName: nil, bundle: nil)
 
@@ -121,7 +125,8 @@ extension MapTableViewController: OBAMapDataLoaderDelegate {
     }
 
     func mapDataLoader(_ mapDataLoader: OBAMapDataLoader, didUpdate searchResult: OBASearchResult) {
-        //
+        self.stops = searchResult.values.filter { $0 is OBAStopV2 } as! [OBAStopV2]
+        reloadData()
     }
 
     func mapDataLoader(_ mapDataLoader: OBAMapDataLoader, startedUpdatingWith target: OBANavigationTarget) {
@@ -163,7 +168,12 @@ extension MapTableViewController: MKMapViewDelegate {
     }
 }
 
-
+// MARK: - Data Loading
+extension MapTableViewController {
+    func reloadData() {
+        collectionView.reloadData()
+    }
+}
 
 // MARK: - Collection View
 extension MapTableViewController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
@@ -195,14 +205,23 @@ extension MapTableViewController: UICollectionViewDataSource, UICollectionViewDe
     }
 
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 10
+        return stops.count
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: identifier, for: indexPath) as! CollectionViewCell
-        cell.textLabel.text = indexPath.description
+        let stop = self.stops[indexPath.item]
+
+        cell.textLabel.text = stop.nameWithDirection
 
         return cell
+    }
+
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let stop = self.stops[indexPath.item]
+
+        let stopController = OBAStopViewController.init(stopID: stop.stopId)
+        self.navigationController?.pushViewController(stopController, animated: true)
     }
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
