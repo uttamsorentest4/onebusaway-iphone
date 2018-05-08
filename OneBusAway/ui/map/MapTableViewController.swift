@@ -24,16 +24,24 @@ class MapTableViewController: UIViewController {
         coll.dataSource = self
         coll.delegate = self
         coll.backgroundView = mapContainer
-        coll.contentInset = UIEdgeInsetsMake(320, 0, 0, 0)
+        coll.contentInset = UIEdgeInsetsMake(view.bounds.height - 200, 0, 0, 0)
         coll.showsVerticalScrollIndicator = false
+        coll.alwaysBounceVertical = true
         coll.backgroundColor = OBATheme.mapTableBackgroundColor
         return coll
+    }()
+
+    private lazy var bottomSweep: UIView = {
+        let view = UIView.init()
+        view.backgroundColor = UIColor.magenta
+
+        return view
     }()
 
     private lazy var mapContainer: UIView = {
         let view = UIView.init(frame: self.view.bounds)
         view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        view.backgroundColor = UIColor.magenta //OBATheme.mapTableBackgroundColor
+        view.backgroundColor = OBATheme.mapTableBackgroundColor
         return view
     }()
 
@@ -79,6 +87,7 @@ class MapTableViewController: UIViewController {
         super.viewDidLoad()
 
         oba_addChildViewController(mapController, to: mapContainer)
+        mapContainer.addSubview(bottomSweep)
 
         registerCells(with: collectionView)
         view.addSubview(collectionView)
@@ -94,6 +103,8 @@ class MapTableViewController: UIViewController {
 extension MapTableViewController : UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         // TODO.
+
+        print(scrollView.contentOffset)
     }
 }
 
@@ -172,6 +183,10 @@ extension MapTableViewController: MKMapViewDelegate {
 extension MapTableViewController {
     func reloadData() {
         collectionView.reloadData()
+//        let contentSize = collectionView.collectionViewLayout.collectionViewContentSize
+//        let offset: CGFloat = 300.0
+//        let sweepFrame = CGRect.init(x: 0, y: offset, width: mapContainer.frame.width, height: mapContainer.frame.height - offset)
+//        bottomSweep.frame = sweepFrame
     }
 }
 
