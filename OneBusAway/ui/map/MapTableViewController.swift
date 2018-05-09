@@ -10,19 +10,68 @@ import UIKit
 import IGListKit
 import MapKit
 
+class PassthroughCollectionView: UICollectionView {
+    override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
+        let height = bounds.height + contentOffset.y
+        let collectionBounds = CGRect.init(x: 0, y: 0, width: bounds.width, height: height)
+        return collectionBounds.contains(point)
+    }
+}
+
 class MapTableViewController: UIViewController, ListAdapterDataSource {
 
     lazy var adapter: ListAdapter = {
         return ListAdapter(updater: ListAdapterUpdater(), viewController: self, workingRangeSize: 1)
     }()
 
-    let collectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
+    let collectionView = PassthroughCollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
 
     let data = [128, 256, 64]
+//    let data = [2,2,2]
+
+
+    private lazy var mapContainer: UIView = {
+        let view = UIView.init(frame: self.view.bounds)
+        view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        view.backgroundColor = OBATheme.mapTableBackgroundColor
+        return view
+    }()
+
+    private var mapController: OBAMapViewController
+
+    init(application: OBAApplication) {
+//        self.application = application
+//        self.locationManager = application.locationManager
+//        self.mapDataLoader = application.mapDataLoader
+//        self.mapRegionManager = application.mapRegionManager
+//        self.modelDAO = application.modelDao
+
+        self.mapController = OBAMapViewController.init(mapDataLoader: application.mapDataLoader, mapRegionManager: application.mapRegionManager)
+        self.mapController.standaloneMode = false
+
+        super.init(nibName: nil, bundle: nil)
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        collectionView.backgroundColor = UIColor(white: 0.95, alpha: 1)
+
+        oba_addChildViewController(mapController, to: mapContainer)
+        mapContainer.frame = view.bounds
+        mapContainer.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        view.addSubview(mapContainer)
+
+        collectionView.backgroundColor = UIColor.clear
+
+        collectionView.contentInset = UIEdgeInsetsMake(view.bounds.height - 200, 0, 0, 0)
+        collectionView.showsVerticalScrollIndicator = false
+        collectionView.alwaysBounceVertical = true
+//        collectionView.backgroundColor = OBATheme.mapTableBackgroundColor
+
+
         view.addSubview(collectionView)
         adapter.collectionView = collectionView
         adapter.dataSource = self

@@ -46,8 +46,7 @@ import OBAKit
     required init(application: OBAApplication) {
         self.application = application
 
-//        mapController = MapTableViewController.init(application: application)
-        mapController = MapTableViewController.init()
+        mapController = MapTableViewController.init(application: application)
         mapNavigationController = UINavigationController.init(rootViewController: mapController)
 
         oldMapController = OBAMapViewController.init(mapDataLoader: application.mapDataLoader, mapRegionManager: application.mapRegionManager)
