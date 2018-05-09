@@ -34,7 +34,7 @@ final class EmbeddedSectionController: ListSectionController {
             fatalError()
         }
         let value = number ?? 0
-        cell.text = "\(value + 1)"
+        cell.text = "Index \(value + 1)"
         cell.backgroundColor = UIColor(red: 237 / 255.0, green: 73 / 255.0, blue: 86 / 255.0, alpha: 1)
         return cell
     }

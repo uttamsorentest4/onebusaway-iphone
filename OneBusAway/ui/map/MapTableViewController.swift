@@ -10,6 +10,7 @@ import UIKit
 import IGListKit
 import MapKit
 
+// https://stackoverflow.com/a/26299473
 class PassthroughCollectionView: UICollectionView {
     override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
         let height = bounds.height + contentOffset.y
@@ -95,7 +96,7 @@ class MapTableViewController: UIViewController, ListAdapterDataSource {
             DisplaySectionController(),
             HorizontalSectionController()
             ])
-        sectionController.inset = UIEdgeInsets(top: 0, left: 0, bottom: 20, right: 0)
+        sectionController.inset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
         return sectionController
     }
 
