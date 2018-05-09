@@ -19,8 +19,9 @@ class PassthroughCollectionView: UICollectionView {
     }
 }
 
-class MapTableViewController: UIViewController, ListAdapterDataSource {
+class MapTableViewController: UIViewController {
 
+    // MARK: - IGListKit/Collection
     lazy var adapter: ListAdapter = {
         return ListAdapter(updater: ListAdapterUpdater(), viewController: self, workingRangeSize: 1)
     }()
@@ -28,8 +29,13 @@ class MapTableViewController: UIViewController, ListAdapterDataSource {
     let collectionView = PassthroughCollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
 
     let data = [128, 256, 64]
-//    let data = [2,2,2]
+    var application: OBAApplication
+    var locationManager: OBALocationManager
+    var mapDataLoader: OBAMapDataLoader
+    var mapRegionManager: OBAMapRegionManager
+    var modelDAO: OBAModelDAO
 
+    // MARK: - Map Controller
 
     private lazy var mapContainer: UIView = {
         let view = UIView.init(frame: self.view.bounds)
@@ -40,12 +46,14 @@ class MapTableViewController: UIViewController, ListAdapterDataSource {
 
     private var mapController: OBAMapViewController
 
+    // MARK: - Init
+
     init(application: OBAApplication) {
-//        self.application = application
-//        self.locationManager = application.locationManager
-//        self.mapDataLoader = application.mapDataLoader
-//        self.mapRegionManager = application.mapRegionManager
-//        self.modelDAO = application.modelDao
+        self.application = application
+        self.locationManager = application.locationManager
+        self.mapDataLoader = application.mapDataLoader
+        self.mapRegionManager = application.mapRegionManager
+        self.modelDAO = application.modelDao
 
         self.mapController = OBAMapViewController.init(mapDataLoader: application.mapDataLoader, mapRegionManager: application.mapRegionManager)
         self.mapController.standaloneMode = false
@@ -57,6 +65,13 @@ class MapTableViewController: UIViewController, ListAdapterDataSource {
         fatalError("init(coder:) has not been implemented")
     }
 
+    deinit {
+        self.mapDataLoader.cancelOpenConnections()
+    }
+}
+
+// MARK: - UIViewController
+extension MapTableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -65,26 +80,30 @@ class MapTableViewController: UIViewController, ListAdapterDataSource {
         mapContainer.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.addSubview(mapContainer)
 
-        collectionView.backgroundColor = UIColor.clear
+        collectionView.backgroundColor = .clear
 
         collectionView.contentInset = UIEdgeInsetsMake(view.bounds.height - 200, 0, 0, 0)
         collectionView.showsVerticalScrollIndicator = false
         collectionView.alwaysBounceVertical = true
-//        collectionView.backgroundColor = OBATheme.mapTableBackgroundColor
-
 
         view.addSubview(collectionView)
         adapter.collectionView = collectionView
         adapter.dataSource = self
     }
 
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        refreshCurrentLocation()
+    }
+
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         collectionView.frame = view.bounds
     }
+}
 
-    // MARK: ListAdapterDataSource
-
+// MARK: ListAdapterDataSource
+extension MapTableViewController: ListAdapterDataSource {
     func objects(for listAdapter: ListAdapter) -> [ListDiffable] {
         return data as [ListDiffable]
     }
@@ -103,53 +122,32 @@ class MapTableViewController: UIViewController, ListAdapterDataSource {
     func emptyView(for listAdapter: ListAdapter) -> UIView? { return nil }
 }
 
+// MARK: - Location Management
+extension MapTableViewController {
+    private func refreshCurrentLocation() {
+        if let location = locationManager.currentLocation {
+            if mapRegionManager.lastRegionChangeWasProgrammatic {
+                let radius = max(location.horizontalAccuracy, OBAMinMapRadiusInMeters)
+                let region = OBASphericalGeometryLibrary.createRegion(withCenter: location.coordinate, latRadius: radius, lonRadius: radius)
+                mapRegionManager.setRegion(region, changeWasProgrammatic: true)
+            }
+        }
+        else if let region = modelDAO.currentRegion {
+            let coordinateRegion = MKCoordinateRegionForMapRect(region.serviceRect)
+            mapRegionManager.setRegion(coordinateRegion, changeWasProgrammatic: true)
+        }
+    }
+}
+
 //class MapTableViewController: UIViewController {
 //
-//    private let identifier = "CellIdentifier"
-//
-//    private lazy var layout: UICollectionViewFlowLayout = {
-//        let flowLayout = UICollectionViewFlowLayout.init()
-//        return flowLayout
-//    }()
-//
-//    private lazy var collectionView: UICollectionView = {
-//        let coll = UICollectionView.init(frame: view.bounds, collectionViewLayout: layout)
-//        coll.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-////        coll.dataSource = self
-////        coll.delegate = self
-//        coll.backgroundView = mapContainer
-//        coll.contentInset = UIEdgeInsetsMake(view.bounds.height - 200, 0, 0, 0)
-//        coll.showsVerticalScrollIndicator = false
-//        coll.alwaysBounceVertical = true
-//        coll.backgroundColor = OBATheme.mapTableBackgroundColor
-//        return coll
-//    }()
-//
-//    private lazy var bottomSweep: UIView = {
-//        let view = UIView.init()
-//        view.backgroundColor = UIColor.magenta
-//
-//        return view
-//    }()
-//
-//    private lazy var mapContainer: UIView = {
-//        let view = UIView.init(frame: self.view.bounds)
-//        view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-//        view.backgroundColor = OBATheme.mapTableBackgroundColor
-//        return view
-//    }()
 //
 //    private var stops: [OBAStopV2] = []
 //
 //    var mapController: OBAMapViewController
 //
-//    var application: OBAApplication
-//    var locationManager: OBALocationManager
-//    var mapDataLoader: OBAMapDataLoader
-//    var mapRegionManager: OBAMapRegionManager
-//    var modelDAO: OBAModelDAO
+
 //
-//    var listAdapter: MapTableListAdapter!
 //
 //    init(application: OBAApplication) {
 //        self.application = application
@@ -173,24 +171,6 @@ class MapTableViewController: UIViewController, ListAdapterDataSource {
 //        self.tabBarItem.selectedImage = UIImage.init(named: "Map_Selected")
 //    }
 //
-//    deinit {
-//        self.mapDataLoader.cancelOpenConnections()
-//    }
-//
-//    required init?(coder aDecoder: NSCoder) {
-//        fatalError("init(coder:) has not been implemented")
-//    }
-//
-//    override func viewDidLoad() {
-//        super.viewDidLoad()
-//
-//        oba_addChildViewController(mapController, to: mapContainer)
-//        mapContainer.addSubview(bottomSweep)
-//
-//        registerCells(with: collectionView)
-//        view.addSubview(collectionView)
-//    }
-//
 //    override func viewDidAppear(_ animated: Bool) {
 //        super.viewDidAppear(animated)
 //        refreshCurrentLocation()
@@ -206,22 +186,6 @@ class MapTableViewController: UIViewController, ListAdapterDataSource {
 //    }
 //}
 //
-//// MARK: - Location Management
-//extension MapTableViewController {
-//    private func refreshCurrentLocation() {
-//        if let location = locationManager.currentLocation {
-//            if mapRegionManager.lastRegionChangeWasProgrammatic {
-//                let radius = max(location.horizontalAccuracy, OBAMinMapRadiusInMeters)
-//                let region = OBASphericalGeometryLibrary.createRegion(withCenter: location.coordinate, latRadius: radius, lonRadius: radius)
-//                mapRegionManager.setRegion(region, changeWasProgrammatic: true)
-//            }
-//        }
-//        else if let region = modelDAO.currentRegion {
-//            let coordinateRegion = MKCoordinateRegionForMapRect(region.serviceRect)
-//            mapRegionManager.setRegion(coordinateRegion, changeWasProgrammatic: true)
-//        }
-//    }
-//}
 //
 //// MARK: - Map Data Loader
 //extension MapTableViewController: OBAMapDataLoaderDelegate {
