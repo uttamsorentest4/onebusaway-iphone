@@ -46,7 +46,8 @@ import OBAKit
     required init(application: OBAApplication) {
         self.application = application
 
-        mapController = MapTableViewController.init(application: application)
+//        mapController = MapTableViewController.init(application: application)
+        mapController = MapTableViewController.init()
         mapNavigationController = UINavigationController.init(rootViewController: mapController)
 
         oldMapController = OBAMapViewController.init(mapDataLoader: application.mapDataLoader, mapRegionManager: application.mapRegionManager)
@@ -116,7 +117,8 @@ extension DrawerApplicationUI: OBAApplicationUI {
 
         switch navigationTarget.target {
         case .map, .searchResults:
-            viewController = mapController
+            // abxoxo
+//            viewController = mapController
             navController = mapNavigationController
         case .recentStops:
             viewController = recentsController
