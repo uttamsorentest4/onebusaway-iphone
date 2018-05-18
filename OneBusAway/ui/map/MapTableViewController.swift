@@ -94,7 +94,7 @@ extension MapTableViewController {
 
         collectionView.backgroundColor = .clear
 
-        collectionView.contentInset = UIEdgeInsetsMake(256, 0, 0, 0)
+        collectionView.contentInset = UIEdgeInsetsMake(Sweep.defaultHeight + 100, 0, 0, 0)
         collectionView.showsVerticalScrollIndicator = false
         collectionView.alwaysBounceVertical = true
 
@@ -110,15 +110,14 @@ extension MapTableViewController {
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-//        collectionView.frame = view.bounds
-        collectionView.frame = CGRect.init(x: 0, y: 0, width: view.bounds.width, height: view.bounds.height + 300)
+        collectionView.frame = CGRect.init(x: 0, y: 0, width: view.bounds.width, height: view.bounds.height + Sweep.defaultHeight)
     }
 }
 
 // MARK: ListAdapterDataSource
 extension MapTableViewController: ListAdapterDataSource {
     func objects(for listAdapter: ListAdapter) -> [ListDiffable] {
-        return (stops.map { $0.name } + [Sweep(height: 300)]) as! [ListDiffable]
+        return (stops.map { $0.name } + [Sweep()]) as! [ListDiffable]
     }
 
     func listAdapter(_ listAdapter: ListAdapter, sectionControllerFor object: Any) -> ListSectionController {

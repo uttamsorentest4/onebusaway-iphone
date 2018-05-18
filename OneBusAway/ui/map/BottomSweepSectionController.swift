@@ -11,7 +11,15 @@ import IGListKit
 import UIKit
 
 final class Sweep: NSObject, ListDiffable {
-    var height: CGFloat
+
+    public static let defaultHeight: CGFloat = 300.0
+
+    let height: CGFloat
+
+    convenience override init() {
+        self.init(height: Sweep.defaultHeight)
+    }
+
     init(height: CGFloat) {
         self.height = height
     }
