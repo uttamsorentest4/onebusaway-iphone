@@ -28,7 +28,12 @@ class MapTableViewController: UIViewController {
 
     let collectionView = PassthroughCollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
 
-    let data = [128, 256, 64]
+    var stops: [OBAStopV2] = [] {
+        didSet {
+            adapter.performUpdates(animated: false)
+        }
+    }
+
     var application: OBAApplication
     var locationManager: OBALocationManager
     var mapDataLoader: OBAMapDataLoader
@@ -59,6 +64,13 @@ class MapTableViewController: UIViewController {
         self.mapController.standaloneMode = false
 
         super.init(nibName: nil, bundle: nil)
+
+        self.mapDataLoader.add(self)
+        self.mapRegionManager.add(delegate: self)
+
+        self.title = NSLocalizedString("msg_map", comment: "Map tab title")
+        self.tabBarItem.image = UIImage.init(named: "Map")
+        self.tabBarItem.selectedImage = UIImage.init(named: "Map_Selected")
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -82,7 +94,7 @@ extension MapTableViewController {
 
         collectionView.backgroundColor = .clear
 
-        collectionView.contentInset = UIEdgeInsetsMake(view.bounds.height - 200, 0, 0, 0)
+        collectionView.contentInset = UIEdgeInsetsMake(256, 0, 0, 0)
         collectionView.showsVerticalScrollIndicator = false
         collectionView.alwaysBounceVertical = true
 
@@ -98,28 +110,35 @@ extension MapTableViewController {
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        collectionView.frame = view.bounds
+//        collectionView.frame = view.bounds
+        collectionView.frame = CGRect.init(x: 0, y: 0, width: view.bounds.width, height: view.bounds.height + 300)
     }
 }
 
 // MARK: ListAdapterDataSource
 extension MapTableViewController: ListAdapterDataSource {
     func objects(for listAdapter: ListAdapter) -> [ListDiffable] {
-        return data as [ListDiffable]
+        return (stops.map { $0.name } + [Sweep(height: 300)]) as! [ListDiffable]
     }
 
     func listAdapter(_ listAdapter: ListAdapter, sectionControllerFor object: Any) -> ListSectionController {
-        // note that each child section controller is designed to handle an Int (or no data)
-        let sectionController = ListStackedSectionController(sectionControllers: [
-            WorkingRangeSectionController(),
-            DisplaySectionController(),
-            HorizontalSectionController()
-            ])
+        let sectionController = createSectionController(for: object)
         sectionController.inset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
         return sectionController
     }
 
     func emptyView(for listAdapter: ListAdapter) -> UIView? { return nil }
+
+    private func createSectionController(for object: Any) -> ListSectionController {
+        switch object {
+        case is Sweep:
+            return BottomSweepSectionController()
+        case is String:
+            return DisplaySectionController()
+        default:
+            fatalError()
+        }
+    }
 }
 
 // MARK: - Location Management
@@ -138,6 +157,33 @@ extension MapTableViewController {
         }
     }
 }
+
+// MARK: - Map Data Loader
+extension MapTableViewController: OBAMapDataLoaderDelegate {
+    func mapDataLoaderFinishedUpdating(_ mapDataLoader: OBAMapDataLoader) {
+        //
+    }
+
+    func mapDataLoader(_ mapDataLoader: OBAMapDataLoader, didReceiveError error: Error) {
+        //
+    }
+
+    func mapDataLoader(_ mapDataLoader: OBAMapDataLoader, didUpdate searchResult: OBASearchResult) {
+        stops = searchResult.values.filter { $0 is OBAStopV2 } as! [OBAStopV2]
+    }
+
+    func mapDataLoader(_ mapDataLoader: OBAMapDataLoader, startedUpdatingWith target: OBANavigationTarget) {
+        //
+    }
+}
+
+// MARK: - Map Region Delegate
+extension MapTableViewController: OBAMapRegionDelegate {
+    func mapRegionManager(_ manager: OBAMapRegionManager, setRegion region: MKCoordinateRegion, animated: Bool) {
+        //
+    }
+}
+
 
 //class MapTableViewController: UIViewController {
 //

@@ -17,14 +17,12 @@ import UIKit
 
 final class DisplaySectionController: ListSectionController, ListDisplayDelegate {
 
+    var data: String?
+
     override init() {
         super.init()
         displayDelegate = self
         inset = UIEdgeInsets(top: 0, left: 0, bottom: 30, right: 0)
-    }
-
-    override func numberOfItems() -> Int {
-        return 4
     }
 
     override func sizeForItem(at index: Int) -> CGSize {
@@ -32,14 +30,24 @@ final class DisplaySectionController: ListSectionController, ListDisplayDelegate
     }
 
     override func cellForItem(at index: Int) -> UICollectionViewCell {
-        guard let cell = collectionContext?.dequeueReusableCell(of: LabelCell.self, for: self, at: index) as? LabelCell else {
+        guard
+            let ctx = collectionContext,
+            let data = data,
+            let cell = ctx.dequeueReusableCell(of: LabelCell.self, for: self, at: index) as? LabelCell
+        else {
             fatalError()
         }
-        cell.text = "Section \(self.section), cell \(index)"
+
+        cell.text = data
         return cell
     }
 
     // MARK: ListDisplayDelegate
+
+    override func didUpdate(to object: Any) {
+        precondition(object is String)
+        data = object as? String
+    }
 
     func listAdapter(_ listAdapter: ListAdapter, willDisplay sectionController: ListSectionController) {
         print("Will display section \(self.section)")
