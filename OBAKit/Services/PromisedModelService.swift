@@ -135,13 +135,13 @@ import Mantle
     ///   - region: The user's current region
     ///   - location: An optional location used to determine more accurate weather data.
     /// - Returns: A promise wrapper that resolves to a WeatherForecast object.
-    @objc func requestWeather(in region: OBARegionV2, location: CLLocation?) -> PromiseWrapper {
+    @objc public func requestWeather(in region: OBARegionV2, location: CLLocation?) -> PromiseWrapper {
         let request = buildURLRequestForWeather(in: region, location: location)
         let wrapper = PromiseWrapper.init(request: request)
 
         wrapper.promise = wrapper.promise.then { networkResponse -> NetworkResponse in
-            let alerts = try self.decodeRegionalAlerts(json: networkResponse.object as! [Any])
-            return NetworkResponse.init(object: alerts, URLResponse: networkResponse.URLResponse, urlRequest: networkResponse.urlRequest)
+            let forecast = try self.decodeWeather(json: networkResponse.object as! [AnyHashable : Any])
+            return NetworkResponse.init(object: forecast, URLResponse: networkResponse.URLResponse, urlRequest: networkResponse.urlRequest)
         }
 
         return wrapper

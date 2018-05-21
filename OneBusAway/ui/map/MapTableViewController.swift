@@ -39,6 +39,14 @@ class MapTableViewController: UIViewController {
     var mapDataLoader: OBAMapDataLoader
     var mapRegionManager: OBAMapRegionManager
     var modelDAO: OBAModelDAO
+    let modelService: PromisedModelService
+
+    // MARK: - Weather
+    var weatherForecast: WeatherForecast? {
+        didSet {
+            self.adapter.performUpdates(animated: true, completion: nil)
+        }
+    }
 
     // MARK: - Map Controller
 
@@ -59,6 +67,7 @@ class MapTableViewController: UIViewController {
         self.mapDataLoader = application.mapDataLoader
         self.mapRegionManager = application.mapRegionManager
         self.modelDAO = application.modelDao
+        self.modelService = application.modelService
 
         self.mapController = OBAMapViewController.init(mapDataLoader: application.mapDataLoader, mapRegionManager: application.mapRegionManager)
         self.mapController.standaloneMode = false
@@ -106,6 +115,7 @@ extension MapTableViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         refreshCurrentLocation()
+        loadForecast()
     }
 
     override func viewDidLayoutSubviews() {
@@ -114,10 +124,38 @@ extension MapTableViewController {
     }
 }
 
-// MARK: ListAdapterDataSource
+// MARK: - Weather
+extension MapTableViewController {
+    fileprivate func loadForecast() {
+        guard let region = modelDAO.currentRegion else {
+            return
+        }
+
+        let wrapper = modelService.requestWeather(in: region, location: self.locationManager.currentLocation)
+        wrapper.promise.then { networkResponse -> Void in
+            let forecast = networkResponse.object as! WeatherForecast
+            self.weatherForecast = forecast
+        }.catch { error in
+            DDLogError("Unable to retrieve regional alerts: \(error)")
+        }
+    }
+}
+
+// MARK: - ListAdapterDataSource
 extension MapTableViewController: ListAdapterDataSource {
     func objects(for listAdapter: ListAdapter) -> [ListDiffable] {
-        return (stops.map { $0.name } + [Sweep()]) as! [ListDiffable]
+        var sections: [ListDiffable] = []
+
+        if let forecast = weatherForecast {
+            sections.append("\(forecast.currentTemperature)º - \(forecast.currentSummary)" as ListDiffable)
+        }
+
+        let stopNames = stops.map { $0.name }
+
+        sections.append(contentsOf: stopNames as [ListDiffable])
+        sections.append(Sweep())
+
+        return sections
     }
 
     func listAdapter(_ listAdapter: ListAdapter, sectionControllerFor object: Any) -> ListSectionController {
@@ -182,176 +220,3 @@ extension MapTableViewController: OBAMapRegionDelegate {
         //
     }
 }
-
-
-//class MapTableViewController: UIViewController {
-//
-//
-//    private var stops: [OBAStopV2] = []
-//
-//    var mapController: OBAMapViewController
-//
-
-//
-//
-//    init(application: OBAApplication) {
-//        self.application = application
-//        self.locationManager = application.locationManager
-//        self.mapDataLoader = application.mapDataLoader
-//        self.mapRegionManager = application.mapRegionManager
-//        self.modelDAO = application.modelDao
-//
-//        self.mapController = OBAMapViewController.init(mapDataLoader: self.mapDataLoader, mapRegionManager: self.mapRegionManager)
-//        self.mapController.standaloneMode = false
-//
-//        super.init(nibName: nil, bundle: nil)
-//
-//        self.listAdapter = MapTableListAdapter(viewController: self, collectionView: collectionView)
-//
-//        self.mapDataLoader.add(self)
-//        self.mapRegionManager.add(delegate: self)
-//
-//        self.title = NSLocalizedString("msg_map", comment: "Map tab title")
-//        self.tabBarItem.image = UIImage.init(named: "Map")
-//        self.tabBarItem.selectedImage = UIImage.init(named: "Map_Selected")
-//    }
-//
-//    override func viewDidAppear(_ animated: Bool) {
-//        super.viewDidAppear(animated)
-//        refreshCurrentLocation()
-//    }
-//}
-//
-//// MARK: - Scroll Delegate
-//extension MapTableViewController : UIScrollViewDelegate {
-//    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-//        // TODO.
-//
-//        print(scrollView.contentOffset)
-//    }
-//}
-//
-//
-//// MARK: - Map Data Loader
-//extension MapTableViewController: OBAMapDataLoaderDelegate {
-//    func mapDataLoaderFinishedUpdating(_ mapDataLoader: OBAMapDataLoader) {
-//        //
-//    }
-//
-//    func mapDataLoader(_ mapDataLoader: OBAMapDataLoader, didReceiveError error: Error) {
-//        //
-//    }
-//
-//    func mapDataLoader(_ mapDataLoader: OBAMapDataLoader, didUpdate searchResult: OBASearchResult) {
-//        self.stops = searchResult.values.filter { $0 is OBAStopV2 } as! [OBAStopV2]
-//        reloadData()
-//    }
-//
-//    func mapDataLoader(_ mapDataLoader: OBAMapDataLoader, startedUpdatingWith target: OBANavigationTarget) {
-//        //
-//    }
-//}
-//
-//// MARK: - Map Region Delegate
-//extension MapTableViewController: OBAMapRegionDelegate {
-//    func mapRegionManager(_ manager: OBAMapRegionManager, setRegion region: MKCoordinateRegion, animated: Bool) {
-//        //
-//    }
-//}
-//
-//// MARK: - Navigation Target Aware
-//extension MapTableViewController: OBANavigationTargetAware {
-//    func navigationTarget() -> OBANavigationTarget {
-//        return mapDataLoader.searchTarget
-////        if mapDataLoader.searchType == .region {
-////            return OBANavigationTarget.init(forSearchLocationRegion: mapView.region)
-////        }
-////        else {
-////            return mapDataLoader.searchTarget
-////        }
-//    }
-//}
-//
-//// MARK: - Map Delegate
-//extension MapTableViewController: MKMapViewDelegate {
-//    public func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
-//
-//        if annotation.isKind(of: MKUserLocation.self) {
-//            return nil
-//        }
-//
-//        let view = mapView.dequeueReusableAnnotationView(withIdentifier: MKMapViewDefaultAnnotationViewReuseIdentifier, for: annotation)
-//
-//        return view
-//    }
-//}
-//
-//// MARK: - Data Loading
-//extension MapTableViewController {
-//    func reloadData() {
-//        collectionView.reloadData()
-////        let contentSize = collectionView.collectionViewLayout.collectionViewContentSize
-////        let offset: CGFloat = 300.0
-////        let sweepFrame = CGRect.init(x: 0, y: offset, width: mapContainer.frame.width, height: mapContainer.frame.height - offset)
-////        bottomSweep.frame = sweepFrame
-//    }
-//}
-//
-//// MARK: - Collection View
-//extension MapTableViewController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
-//
-//    class CollectionViewCell: UICollectionViewCell {
-//        let textLabel = UILabel.init()
-//
-//        override init(frame: CGRect) {
-//            super.init(frame: frame)
-//
-//            contentView.backgroundColor = UIColor.white
-//
-//            textLabel.frame = contentView.bounds
-//            textLabel.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-//            contentView.addSubview(textLabel)
-//        }
-//
-//        required init?(coder aDecoder: NSCoder) {
-//            fatalError("init(coder:) has not been implemented")
-//        }
-//    }
-//
-//    func registerCells(with collectionView: UICollectionView) {
-//        collectionView.register(CollectionViewCell.self, forCellWithReuseIdentifier: identifier)
-//    }
-//
-//    func numberOfSections(in collectionView: UICollectionView) -> Int {
-//        return 1
-//    }
-//
-//    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-//        return stops.count
-//    }
-//
-//    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-//        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: identifier, for: indexPath) as! CollectionViewCell
-//        let stop = self.stops[indexPath.item]
-//
-//        cell.textLabel.text = stop.nameWithDirection
-//
-//        return cell
-//    }
-//
-//    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-//        let stop = self.stops[indexPath.item]
-//
-//        let stopController = OBAStopViewController.init(stopID: stop.stopId)
-//        self.navigationController?.pushViewController(stopController, animated: true)
-//    }
-//
-//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-//        return CGSize(width: collectionView.frame.width, height: 44)
-//    }
-//
-//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-//        return 0
-//    }
-//
-//}
