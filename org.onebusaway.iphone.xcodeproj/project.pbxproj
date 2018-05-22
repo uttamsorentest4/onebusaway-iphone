@@ -166,6 +166,7 @@
 		9385EC401DCF1D910020CCB2 /* ServiceAlertDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9385EC3F1DCF1D910020CCB2 /* ServiceAlertDetailsViewController.swift */; };
 		93876DFB1E68AD3900B4343F /* OBAMapAnnotationViewBuilder.m in Sources */ = {isa = PBXBuildFile; fileRef = 93876DFA1E68AD3900B4343F /* OBAMapAnnotationViewBuilder.m */; };
 		93A1C68A20B3F63F00E176DE /* ForecastSectionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93A1C68920B3F63F00E176DE /* ForecastSectionController.swift */; };
+		93A1C68C20B3F78900E176DE /* WeatherCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93A1C68B20B3F78900E176DE /* WeatherCell.swift */; };
 		93A637A520A203CB0005248C /* IGListKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 93A637A320A203CA0005248C /* IGListKit.framework */; };
 		93A637DB20A2CCE30005248C /* HorizontalSectionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93A637D820A2CCE20005248C /* HorizontalSectionController.swift */; };
 		93A637DC20A2CCE30005248C /* DisplaySectionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93A637D920A2CCE20005248C /* DisplaySectionController.swift */; };
@@ -520,6 +521,7 @@
 		93876DFA1E68AD3900B4343F /* OBAMapAnnotationViewBuilder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OBAMapAnnotationViewBuilder.m; sourceTree = "<group>"; };
 		939CEB241C0E406500E1D2B7 /* rvtd.gpx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = rvtd.gpx; sourceTree = "<group>"; };
 		93A1C68920B3F63F00E176DE /* ForecastSectionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForecastSectionController.swift; sourceTree = "<group>"; };
+		93A1C68B20B3F78900E176DE /* WeatherCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherCell.swift; sourceTree = "<group>"; };
 		93A637A320A203CA0005248C /* IGListKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IGListKit.framework; path = Carthage/Build/iOS/IGListKit.framework; sourceTree = "<group>"; };
 		93A637D820A2CCE20005248C /* HorizontalSectionController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HorizontalSectionController.swift; sourceTree = "<group>"; };
 		93A637D920A2CCE20005248C /* DisplaySectionController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DisplaySectionController.swift; sourceTree = "<group>"; };
@@ -1416,6 +1418,7 @@
 			isa = PBXGroup;
 			children = (
 				93A1C68920B3F63F00E176DE /* ForecastSectionController.swift */,
+				93A1C68B20B3F78900E176DE /* WeatherCell.swift */,
 			);
 			path = Forecast;
 			sourceTree = "<group>";
@@ -1862,6 +1865,7 @@
 				934198241DB0C1BA004BBBB7 /* OBATextEditViewController.m in Sources */,
 				93F9574A1E9AFB020022586B /* UIWindow+OBAAdditions.m in Sources */,
 				93A6E5241E6CB23500BEFECE /* ISHHoverBar.m in Sources */,
+				93A1C68C20B3F78900E176DE /* WeatherCell.swift in Sources */,
 				9341977F1DB0C140004BBBB7 /* OBABookmarkGroupsViewController.m in Sources */,
 				9341979F1DB0C140004BBBB7 /* OBASeparatorSectionView.m in Sources */,
 				9341979D1DB0C140004BBBB7 /* OBACollapsingHeaderView.m in Sources */,

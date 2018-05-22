@@ -26,12 +26,12 @@ class ForecastSectionController: ListSectionController, ListDisplayDelegate {
         guard
             let ctx = collectionContext,
             let data = data,
-            let cell = ctx.dequeueReusableCell(of: LabelCell.self, for: self, at: index) as? LabelCell
+            let cell = ctx.dequeueReusableCell(of: WeatherCell.self, for: self, at: index) as? WeatherCell
             else {
                 fatalError()
         }
 
-        cell.text = "\(data.currentTemperature) - \(data.currentSummary)"
+        cell.forecast = data
         return cell
     }
 
