@@ -34,7 +34,7 @@ final class LabelCell: UICollectionViewCell {
 
     fileprivate let label: UILabel = {
         let label = UILabel()
-        label.backgroundColor = .clear
+        label.backgroundColor = .white
         label.numberOfLines = 0
         label.font = LabelCell.font
         return label
@@ -59,7 +59,7 @@ final class LabelCell: UICollectionViewCell {
         super.init(frame: frame)
         contentView.addSubview(label)
         contentView.layer.addSublayer(separator)
-        contentView.backgroundColor = .white
+        contentView.backgroundColor = OBATheme.mapTableBackgroundColor
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -77,10 +77,9 @@ final class LabelCell: UICollectionViewCell {
 
     override var isHighlighted: Bool {
         didSet {
-            contentView.backgroundColor = UIColor(white: isHighlighted ? 0.9 : 1, alpha: 1)
+//            contentView.backgroundColor = UIColor(white: isHighlighted ? 0.9 : 1, alpha: 1)
         }
     }
-
 }
 
 extension LabelCell: ListBindable {

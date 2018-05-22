@@ -70,5 +70,4 @@ final class DisplaySectionController: ListSectionController, ListDisplayDelegate
                      at index: Int) {
                        print("Did end displaying cell \(index) in section \(self.section)")
     }
-
 }

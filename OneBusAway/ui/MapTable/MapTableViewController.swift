@@ -147,7 +147,7 @@ extension MapTableViewController: ListAdapterDataSource {
         var sections: [ListDiffable] = []
 
         if let forecast = weatherForecast {
-            sections.append("\(forecast.currentTemperature)º - \(forecast.currentSummary)" as ListDiffable)
+            sections.append(forecast)
         }
 
         let stopNames = stops.map { $0.name }
@@ -170,6 +170,8 @@ extension MapTableViewController: ListAdapterDataSource {
         switch object {
         case is Sweep:
             return BottomSweepSectionController()
+        case is WeatherForecast:
+            return ForecastSectionController()
         case is String:
             return DisplaySectionController()
         default:

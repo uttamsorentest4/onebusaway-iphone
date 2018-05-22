@@ -165,16 +165,14 @@
 		9385EC3B1DCF14C60020CCB2 /* OBASettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9385EC3A1DCF14C60020CCB2 /* OBASettingsViewController.m */; };
 		9385EC401DCF1D910020CCB2 /* ServiceAlertDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9385EC3F1DCF1D910020CCB2 /* ServiceAlertDetailsViewController.swift */; };
 		93876DFB1E68AD3900B4343F /* OBAMapAnnotationViewBuilder.m in Sources */ = {isa = PBXBuildFile; fileRef = 93876DFA1E68AD3900B4343F /* OBAMapAnnotationViewBuilder.m */; };
+		93A1C68A20B3F63F00E176DE /* ForecastSectionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93A1C68920B3F63F00E176DE /* ForecastSectionController.swift */; };
 		93A637A520A203CB0005248C /* IGListKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 93A637A320A203CA0005248C /* IGListKit.framework */; };
-		93A637A720A22A990005248C /* MapTableListAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93A637A620A22A990005248C /* MapTableListAdapter.swift */; };
 		93A637DB20A2CCE30005248C /* HorizontalSectionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93A637D820A2CCE20005248C /* HorizontalSectionController.swift */; };
 		93A637DC20A2CCE30005248C /* DisplaySectionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93A637D920A2CCE20005248C /* DisplaySectionController.swift */; };
-		93A637DD20A2CCE30005248C /* WorkingRangeSectionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93A637DA20A2CCE30005248C /* WorkingRangeSectionController.swift */; };
 		93A637DF20A2CD8D0005248C /* EmbeddedCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93A637DE20A2CD8C0005248C /* EmbeddedCollectionViewCell.swift */; };
 		93A637E120A2CDA60005248C /* EmbeddedSectionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93A637E020A2CDA60005248C /* EmbeddedSectionController.swift */; };
 		93A637E320A2CDDC0005248C /* CenterLabelCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93A637E220A2CDDC0005248C /* CenterLabelCell.swift */; };
 		93A637E520A2CDE50005248C /* LabelCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93A637E420A2CDE50005248C /* LabelCell.swift */; };
-		93A637E720A2CDF60005248C /* ImageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93A637E620A2CDF50005248C /* ImageCell.swift */; };
 		93A6E5241E6CB23500BEFECE /* ISHHoverBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 93A6E5231E6CB23500BEFECE /* ISHHoverBar.m */; };
 		93A6E9EA1F5C9EB400AFA61C /* OBAArrivalDepartureOptionsSheet.m in Sources */ = {isa = PBXBuildFile; fileRef = 93A6E9E91F5C9EB400AFA61C /* OBAArrivalDepartureOptionsSheet.m */; };
 		93A6E9EE1F5CC11800AFA61C /* UIViewController+OBAAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 93A6E9ED1F5CC11800AFA61C /* UIViewController+OBAAdditions.m */; };
@@ -521,16 +519,14 @@
 		93876DF91E68AD3900B4343F /* OBAMapAnnotationViewBuilder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OBAMapAnnotationViewBuilder.h; sourceTree = "<group>"; };
 		93876DFA1E68AD3900B4343F /* OBAMapAnnotationViewBuilder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OBAMapAnnotationViewBuilder.m; sourceTree = "<group>"; };
 		939CEB241C0E406500E1D2B7 /* rvtd.gpx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = rvtd.gpx; sourceTree = "<group>"; };
+		93A1C68920B3F63F00E176DE /* ForecastSectionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForecastSectionController.swift; sourceTree = "<group>"; };
 		93A637A320A203CA0005248C /* IGListKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IGListKit.framework; path = Carthage/Build/iOS/IGListKit.framework; sourceTree = "<group>"; };
-		93A637A620A22A990005248C /* MapTableListAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapTableListAdapter.swift; sourceTree = "<group>"; };
 		93A637D820A2CCE20005248C /* HorizontalSectionController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HorizontalSectionController.swift; sourceTree = "<group>"; };
 		93A637D920A2CCE20005248C /* DisplaySectionController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DisplaySectionController.swift; sourceTree = "<group>"; };
-		93A637DA20A2CCE30005248C /* WorkingRangeSectionController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WorkingRangeSectionController.swift; sourceTree = "<group>"; };
 		93A637DE20A2CD8C0005248C /* EmbeddedCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EmbeddedCollectionViewCell.swift; sourceTree = "<group>"; };
 		93A637E020A2CDA60005248C /* EmbeddedSectionController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EmbeddedSectionController.swift; sourceTree = "<group>"; };
 		93A637E220A2CDDC0005248C /* CenterLabelCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CenterLabelCell.swift; sourceTree = "<group>"; };
 		93A637E420A2CDE50005248C /* LabelCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LabelCell.swift; sourceTree = "<group>"; };
-		93A637E620A2CDF50005248C /* ImageCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageCell.swift; sourceTree = "<group>"; };
 		93A6E5221E6CB23500BEFECE /* ISHHoverBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ISHHoverBar.h; sourceTree = "<group>"; };
 		93A6E5231E6CB23500BEFECE /* ISHHoverBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ISHHoverBar.m; sourceTree = "<group>"; };
 		93A6E9E81F5C9EB400AFA61C /* OBAArrivalDepartureOptionsSheet.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OBAArrivalDepartureOptionsSheet.h; sourceTree = "<group>"; };
@@ -782,6 +778,7 @@
 		934196E81DB0C13F004BBBB7 /* ui */ = {
 			isa = PBXGroup;
 			children = (
+				93A1C68620B3F0D200E176DE /* MapTable */,
 				930CE4D81E9BFB440073F04D /* debugging */,
 				936EB1BB1E92F27400F4F3A7 /* onboarding */,
 				93F3F88C1E7A7B160025FC78 /* regional_alerts */,
@@ -1399,6 +1396,30 @@
 			path = onboarding;
 			sourceTree = "<group>";
 		};
+		93A1C68620B3F0D200E176DE /* MapTable */ = {
+			isa = PBXGroup;
+			children = (
+				93A1C68820B3F62700E176DE /* Forecast */,
+				93C48E482096EF0F001FB95C /* MapTableViewController.swift */,
+				93A637E420A2CDE50005248C /* LabelCell.swift */,
+				93A637E220A2CDDC0005248C /* CenterLabelCell.swift */,
+				93A637E020A2CDA60005248C /* EmbeddedSectionController.swift */,
+				93A637DE20A2CD8C0005248C /* EmbeddedCollectionViewCell.swift */,
+				9383FCAF20AF6FEA007347B2 /* BottomSweepSectionController.swift */,
+				93A637D920A2CCE20005248C /* DisplaySectionController.swift */,
+				93A637D820A2CCE20005248C /* HorizontalSectionController.swift */,
+			);
+			path = MapTable;
+			sourceTree = "<group>";
+		};
+		93A1C68820B3F62700E176DE /* Forecast */ = {
+			isa = PBXGroup;
+			children = (
+				93A1C68920B3F63F00E176DE /* ForecastSectionController.swift */,
+			);
+			path = Forecast;
+			sourceTree = "<group>";
+		};
 		93A6E5211E6CB23500BEFECE /* ISHHoverBar */ = {
 			isa = PBXGroup;
 			children = (
@@ -1424,21 +1445,10 @@
 		93B781A21E64BA7800F2C38D /* map */ = {
 			isa = PBXGroup;
 			children = (
-				93A637E620A2CDF50005248C /* ImageCell.swift */,
-				93A637E420A2CDE50005248C /* LabelCell.swift */,
-				93A637E220A2CDDC0005248C /* CenterLabelCell.swift */,
-				93A637E020A2CDA60005248C /* EmbeddedSectionController.swift */,
-				93A637DE20A2CD8C0005248C /* EmbeddedCollectionViewCell.swift */,
-				93A637D920A2CCE20005248C /* DisplaySectionController.swift */,
-				93A637D820A2CCE20005248C /* HorizontalSectionController.swift */,
-				93A637DA20A2CCE30005248C /* WorkingRangeSectionController.swift */,
 				93B781A91E64BAC900F2C38D /* OBAMapViewController.h */,
 				93B781AA1E64BAC900F2C38D /* OBAMapViewController.m */,
 				93876DF91E68AD3900B4343F /* OBAMapAnnotationViewBuilder.h */,
 				93876DFA1E68AD3900B4343F /* OBAMapAnnotationViewBuilder.m */,
-				93C48E482096EF0F001FB95C /* MapTableViewController.swift */,
-				93A637A620A22A990005248C /* MapTableListAdapter.swift */,
-				9383FCAF20AF6FEA007347B2 /* BottomSweepSectionController.swift */,
 			);
 			path = map;
 			sourceTree = "<group>";
@@ -1771,6 +1781,7 @@
 				933546DD1E834ABE00D83519 /* OBAMessageRow.m in Sources */,
 				934197871DB0C140004BBBB7 /* OBACreditsViewController.m in Sources */,
 				934197921DB0C140004BBBB7 /* OBADiversionViewController.m in Sources */,
+				93A1C68A20B3F63F00E176DE /* ForecastSectionController.swift in Sources */,
 				934198211DB0C1BA004BBBB7 /* OBATextFieldTableViewCell.m in Sources */,
 				934197821DB0C140004BBBB7 /* OBAEditStopBookmarkViewController.m in Sources */,
 				9341982C1DB0C1D6004BBBB7 /* main.m in Sources */,
@@ -1808,10 +1819,8 @@
 				930AFE8C1DD04D2F0092AE82 /* OBAStopTableHeaderView.m in Sources */,
 				934197811DB0C140004BBBB7 /* OBABookmarksViewController.m in Sources */,
 				934197A11DB0C140004BBBB7 /* OBASegmentedRow.m in Sources */,
-				93A637DD20A2CCE30005248C /* WorkingRangeSectionController.swift in Sources */,
 				9341977D1DB0C140004BBBB7 /* AlertPresenter.swift in Sources */,
 				934C50A01E2B69E300DFDCA0 /* GKActionSheetPicker.m in Sources */,
-				93A637A720A22A990005248C /* MapTableListAdapter.swift in Sources */,
 				9364DC552033630C00F857E9 /* UIView+constrainToParent.swift in Sources */,
 				934197BD1DB0C140004BBBB7 /* OBATripScheduleSectionBuilder.m in Sources */,
 				930AFE961DD11ECB0092AE82 /* OBAWalkableRow.m in Sources */,
@@ -1837,7 +1846,6 @@
 				934197A51DB0C140004BBBB7 /* OBATextFieldRow.m in Sources */,
 				931A6A291E03EAA100131242 /* OBATimelineBarRow.m in Sources */,
 				93A637E320A2CDDC0005248C /* CenterLabelCell.swift in Sources */,
-				93A637E720A2CDF60005248C /* ImageCell.swift in Sources */,
 				934196E21DB0C124004BBBB7 /* MKMapView+oba_Additions.m in Sources */,
 				9383FCB020AF6FEA007347B2 /* BottomSweepSectionController.swift in Sources */,
 				934198171DB0C1BA004BBBB7 /* OBARotatingButton.m in Sources */,

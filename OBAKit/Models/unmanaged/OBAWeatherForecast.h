@@ -6,13 +6,15 @@
 //  Copyright © 2018 OneBusAway. All rights reserved.
 //
 
+@import Foundation;
 @import UIKit;
 @import Mantle;
+@import IGListKit;
 
 NS_ASSUME_NONNULL_BEGIN
 
 NS_SWIFT_NAME(WeatherForecast)
-@interface OBAWeatherForecast : MTLModel<MTLJSONSerializing>
+@interface OBAWeatherForecast : MTLModel<MTLJSONSerializing, IGListDiffable>
 @property(nonatomic,assign,readonly) CGFloat latitude;
 @property(nonatomic,assign,readonly) CGFloat longitude;
 @property(nonatomic,assign,readonly) NSUInteger regionIdentifier;

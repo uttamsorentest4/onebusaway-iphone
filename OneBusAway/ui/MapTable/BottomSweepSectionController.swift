@@ -8,6 +8,7 @@
 
 
 import IGListKit
+import OBAKit
 import UIKit
 
 final class Sweep: NSObject, ListDiffable {
@@ -54,7 +55,7 @@ final class BottomSweepSectionController: ListSectionController {
         }
 
         let sweepCell = ctx.dequeueReusableCell(of: UICollectionViewCell.self, for: self, at: index)
-        sweepCell.backgroundColor = .magenta
+        sweepCell.backgroundColor = OBATheme.mapTableBackgroundColor
         return sweepCell
     }
 
