@@ -24,6 +24,8 @@ class SelfSizingCollectionCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
 
+        backgroundColor = OBATheme.mapTableBackgroundColor
+
         clipsToBounds = true
 
         contentView.frame = bounds
