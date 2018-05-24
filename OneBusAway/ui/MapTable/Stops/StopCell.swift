@@ -38,21 +38,34 @@ class StopCell: SelfSizingCollectionCell {
         super.init(frame: frame)
         backgroundColor = OBATheme.mapTableBackgroundColor
 
-        contentView.addSubview(label)
-        label.snp.makeConstraints { (make) in
-            make.edges.equalToSuperview().inset(SelfSizingCollectionCell.insets).inset(UIEdgeInsetsMake(0, OBATheme.defaultPadding, 0, OBATheme.defaultPadding))
-            make.height.greaterThanOrEqualTo(44.0)
+        let wrapper = label.oba_embedInWrapper()
+        contentView.addSubview(wrapper)
+        label.snp.remakeConstraints { (make) in
+            make.edges.equalToSuperview()//.inset(UIEdgeInsetsMake(0, 8, 0, 8))
         }
 
+        wrapper.snp.makeConstraints { (make) in
+            make.height.greaterThanOrEqualTo(44)
+            make.edges.equalToSuperview()
+        }
+
+//        wrapper.snp.makeConstraints { (make) in
+//            make.edges.equalToSuperview().inset(SelfSizingCollectionCell.insets).inset(UIEdgeInsetsMake(0, OBATheme.defaultPadding, 0, OBATheme.defaultPadding))
+//            make.height.greaterThanOrEqualTo(44.0)
+//        }
+
         contentView.layer.addSublayer(separator)
+
+        label.backgroundColor = .magenta
+        wrapper.backgroundColor = .yellow
     }
 
     override func layoutSubviews() {
         super.layoutSubviews()
         let bounds = contentView.bounds
         let height: CGFloat = 0.5
-        let left = OBATheme.defaultEdgeInsets.left
-        separator.frame = CGRect(x: left, y: bounds.height - height, width: bounds.width - left, height: height)
+        let sideInset = OBATheme.defaultEdgeInsets.left
+        separator.frame = CGRect(x: sideInset, y: bounds.height - height, width: bounds.width - (2 * sideInset), height: height)
     }
 
 

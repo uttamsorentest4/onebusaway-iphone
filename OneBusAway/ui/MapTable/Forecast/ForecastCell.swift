@@ -21,6 +21,10 @@ class ForecastCell: SelfSizingCollectionCell {
         label.backgroundColor = .white
         label.numberOfLines = 1
         label.font = ForecastCell.titleFont
+        label.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
+        label.setContentCompressionResistancePriority(.required, for: .vertical)
+        label.setContentHuggingPriority(.defaultLow, for: .horizontal)
+        label.setContentHuggingPriority(.defaultHigh, for: .vertical)
         return label
     }()
 
@@ -37,7 +41,7 @@ class ForecastCell: SelfSizingCollectionCell {
         imageView.contentMode = .scaleAspectFit
         imageView.backgroundColor = .white
         imageView.snp.makeConstraints { make in
-            make.width.height.equalTo(64)
+            make.width.height.equalTo(44)
         }
         return imageView
     }()
@@ -47,7 +51,7 @@ class ForecastCell: SelfSizingCollectionCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
 
-        let labelStack = UIStackView.init(arrangedSubviews: [temperatureLabel, summaryLabel])
+        let labelStack = UIStackView.init(arrangedSubviews: [temperatureLabel, summaryLabel, UIView()])
         labelStack.axis = .vertical
         let labelWrapper = labelStack.oba_embedInWrapper()
 
@@ -61,6 +65,12 @@ class ForecastCell: SelfSizingCollectionCell {
         }
 
         contentView.backgroundColor = OBATheme.mapTableBackgroundColor
+
+        layer.masksToBounds = false
+        layer.shadowColor = UIColor.black.cgColor
+        layer.shadowRadius = 2.0
+        layer.shadowOffset = .zero
+        layer.shadowOpacity = 0.5
     }
 
     required init?(coder aDecoder: NSCoder) { fatalError("init(coder:) has not been implemented") }
