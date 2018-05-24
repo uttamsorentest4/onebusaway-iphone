@@ -38,15 +38,16 @@ class StopCell: SelfSizingCollectionCell {
         super.init(frame: frame)
         backgroundColor = OBATheme.mapTableBackgroundColor
 
-        let wrapper = label.oba_embedInWrapper()
-        contentView.addSubview(wrapper)
-        label.snp.remakeConstraints { (make) in
-            make.edges.equalToSuperview()//.inset(UIEdgeInsetsMake(0, 8, 0, 8))
+        let plainWrapper = label.oba_embedInWrapper()
+        let cardWrapper = plainWrapper.oba_embedInCardWrapper()
+
+        label.snp.updateConstraints { (make) in
+            make.height.greaterThanOrEqualTo(44)
         }
 
-        wrapper.snp.makeConstraints { (make) in
-            make.height.greaterThanOrEqualTo(44)
-            make.edges.equalToSuperview()
+        contentView.addSubview(cardWrapper)
+        cardWrapper.snp.makeConstraints { make in
+            make.edges.equalToSuperview().inset(UIEdgeInsetsMake(0, OBATheme.defaultPadding, 0, OBATheme.defaultPadding))
         }
 
 //        wrapper.snp.makeConstraints { (make) in
@@ -56,8 +57,8 @@ class StopCell: SelfSizingCollectionCell {
 
         contentView.layer.addSublayer(separator)
 
-        label.backgroundColor = .magenta
-        wrapper.backgroundColor = .yellow
+//        label.backgroundColor = .magenta
+//        plainWrapper.backgroundColor = .yellow
     }
 
     override func layoutSubviews() {
