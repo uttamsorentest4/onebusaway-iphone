@@ -31,13 +31,17 @@
 }
 
 - (UIView*)oba_embedInWrapperView {
-    UIView *wrapper = [[UIView alloc] initWithFrame:CGRectZero];
-    wrapper.translatesAutoresizingMaskIntoConstraints = NO;
-    [wrapper addSubview:self];
-    [self mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.equalTo(wrapper);
-    }];
+    return [self oba_embedInWrapperViewWithConstraints:YES];
+}
 
+- (UIView*)oba_embedInWrapperViewWithConstraints:(BOOL)constrained {
+    UIView *wrapper = [[UIView alloc] initWithFrame:CGRectZero];
+    [wrapper addSubview:self];
+    if (constrained) {
+        [self mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.edges.equalTo(wrapper);
+        }];
+    }
     return wrapper;
 }
 

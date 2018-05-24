@@ -16,7 +16,9 @@ NS_ASSUME_NONNULL_BEGIN
 + (instancetype)oba_autolayoutNew;
 
 - (OBACardWrapper*)oba_embedInCardWrapper;
+
 - (UIView*)oba_embedInWrapperView;
+- (UIView*)oba_embedInWrapperViewWithConstraints:(BOOL)constrained;
 
 // Debug-only
 - (void)printAutoLayoutTrace;
