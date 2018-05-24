@@ -143,7 +143,7 @@ extension DrawerApplicationUI: OBAApplicationUI {
         }
 
         if navigationTarget.parameters["stop"] != nil, let stopID = navigationTarget.parameters["stopID"] as? String {
-            let vc = OBAStopViewController.init(stopID: stopID)
+            let vc = StopViewController.init(stopID: stopID)
             mapNavigationController.pushViewController(vc, animated: true)
         }
 

@@ -256,7 +256,7 @@ extension NearbyStopsViewController {
             guard let stopID = target.searchArgument as? String else {
                 return
             }
-            let stopController = OBAStopViewController.init(stopID: stopID)
+            let stopController = StopViewController.init(stopID: stopID)
             self.navigationController?.pushViewController(stopController, animated: true)
         }
         else {

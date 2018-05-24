@@ -39,4 +39,16 @@ class StopSectionController: ListSectionController {
         precondition(object is StopViewModel)
         data = object as? StopViewModel
     }
+
+    override func didSelectItem(at index: Int) {
+        guard
+            let data = data,
+            let viewController = viewController
+        else {
+            return
+        }
+
+        let stopController = StopViewController(stopID: data.stopID)
+        viewController.navigationController?.pushViewController(stopController, animated: true)
+    }
 }
