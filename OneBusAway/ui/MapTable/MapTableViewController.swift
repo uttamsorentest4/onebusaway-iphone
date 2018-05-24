@@ -206,20 +206,8 @@ extension MapTableViewController {
 
 // MARK: - Map Data Loader
 extension MapTableViewController: OBAMapDataLoaderDelegate {
-    func mapDataLoaderFinishedUpdating(_ mapDataLoader: OBAMapDataLoader) {
-        //
-    }
-
-    func mapDataLoader(_ mapDataLoader: OBAMapDataLoader, didReceiveError error: Error) {
-        //
-    }
-
     func mapDataLoader(_ mapDataLoader: OBAMapDataLoader, didUpdate searchResult: OBASearchResult) {
         stops = searchResult.values.filter { $0 is OBAStopV2 } as! [OBAStopV2]
-    }
-
-    func mapDataLoader(_ mapDataLoader: OBAMapDataLoader, startedUpdatingWith target: OBANavigationTarget) {
-        //
     }
 }
 
