@@ -26,7 +26,12 @@ class MapTableViewController: UIViewController {
         return ListAdapter(updater: ListAdapterUpdater(), viewController: self, workingRangeSize: 1)
     }()
 
-    let collectionView = PassthroughCollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
+    let collectionView: PassthroughCollectionView = {
+        let layout = UICollectionViewFlowLayout()
+        layout.estimatedItemSize = CGSize(width: 375, height: 40)
+        let collectionView = PassthroughCollectionView(frame: .zero, collectionViewLayout: layout)
+        return collectionView
+    }()
 
     var stops: [OBAStopV2] = [] {
         didSet {
@@ -150,9 +155,9 @@ extension MapTableViewController: ListAdapterDataSource {
             sections.append(forecast)
         }
 
-        let stopNames = stops.map { $0.name }
+        let stopViewModels: [StopViewModel] = stops.map { StopViewModel.init(name: $0.name, stopID: $0.stopId, direction: $0.direction) }
+        sections.append(contentsOf: stopViewModels)
 
-        sections.append(contentsOf: stopNames as [ListDiffable])
         sections.append(Sweep())
 
         return sections
@@ -172,6 +177,8 @@ extension MapTableViewController: ListAdapterDataSource {
             return BottomSweepSectionController()
         case is WeatherForecast:
             return ForecastSectionController()
+        case is StopViewModel:
+            return StopSectionController()
         case is String:
             return DisplaySectionController()
         default:

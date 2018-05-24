@@ -14,11 +14,12 @@
 
 @implementation OBAUIBuilder
 
-+ (UILabel*)label {
++ (UILabel*)autolayoutLabel {
     UILabel *label = [[UILabel alloc] initWithFrame:CGRectZero];
-    label.numberOfLines = 1;
-    label.adjustsFontSizeToFitWidth = YES;
-    label.minimumScaleFactor = 0.8f;
+    label.translatesAutoresizingMaskIntoConstraints = NO;
+    label.numberOfLines = 0;
+//    [label setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisVertical];
+//    [label setContentCompressionResistancePriority:UILayoutPriorityDefaultHigh forAxis:UILayoutConstraintAxisHorizontal];
     return label;
 }
 

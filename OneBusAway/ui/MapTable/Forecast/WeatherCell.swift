@@ -6,24 +6,15 @@
 //  Copyright © 2018 OneBusAway. All rights reserved.
 //
 
+import OBAKit
 import UIKit
+import SnapKit
 
-class WeatherCell: UICollectionViewCell {
-    fileprivate static let insets = UIEdgeInsets(top: 8, left: 15, bottom: 8, right: 15)
+class WeatherCell: SelfSizingCollectionCell {
+
+    // MARK: - Properties
     fileprivate static let titleFont = OBATheme.largeTitleFont!
     fileprivate static let summaryFont = OBATheme.footnoteFont!
-
-    static var singleLineHeight: CGFloat {
-        return titleFont.lineHeight + summaryFont.lineHeight + insets.top + insets.bottom
-    }
-
-    static func textHeight(_ text: String, width: CGFloat, font: UIFont) -> CGFloat {
-        let constrainedSize = CGSize(width: width - insets.left - insets.right, height: CGFloat.greatestFiniteMagnitude)
-        let attributes = [ NSAttributedStringKey.font: font ]
-        let options: NSStringDrawingOptions = [.usesFontLeading, .usesLineFragmentOrigin]
-        let bounds = (text as NSString).boundingRect(with: constrainedSize, options: options, attributes: attributes, context: nil)
-        return ceil(bounds.height) + insets.top + insets.bottom
-    }
 
     fileprivate let temperatureLabel: UILabel = {
         let label = UILabel()
@@ -41,20 +32,40 @@ class WeatherCell: UICollectionViewCell {
         return label
     }()
 
+    fileprivate let weatherImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFit
+        imageView.backgroundColor = .white
+        imageView.snp.makeConstraints { make in
+            make.width.height.equalTo(64)
+        }
+        return imageView
+    }()
+
+    // MARK: - Init
+
     override init(frame: CGRect) {
         super.init(frame: frame)
-        contentView.addSubview(summaryLabel)
-        contentView.addSubview(temperatureLabel)
+
+        let labelStack = UIStackView.init(arrangedSubviews: [temperatureLabel, summaryLabel])
+        labelStack.axis = .vertical
+        let labelWrapper = labelStack.oba_embedInWrapper()
+
+        let outerStack = UIStackView.init(arrangedSubviews: [weatherImageView, labelWrapper])
+        outerStack.axis = .horizontal
+        let outerWrapper = outerStack.oba_embedInWrapper()
+
+        contentView.addSubview(outerWrapper)
+        outerWrapper.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
+
         contentView.backgroundColor = OBATheme.mapTableBackgroundColor
     }
 
     required init?(coder aDecoder: NSCoder) { fatalError("init(coder:) has not been implemented") }
 
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        let bounds = contentView.bounds
-        temperatureLabel.frame = UIEdgeInsetsInsetRect(bounds, WeatherCell.insets)
-    }
+    // MARK: - Data Loading
 
     var forecast: WeatherForecast? {
         didSet {
@@ -64,16 +75,7 @@ class WeatherCell: UICollectionViewCell {
             let truncatedTemperature = Int(forecast.currentTemperature)
             temperatureLabel.text = "\(truncatedTemperature)º"
             summaryLabel.text = forecast.currentSummary
+            weatherImageView.image = UIImage(named: forecast.currentSummaryIconName)
         }
-    }
-}
-
-extension WeatherCell: ListBindable {
-
-    func bindViewModel(_ viewModel: Any) {
-        guard let viewModel = viewModel as? WeatherForecast else { return }
-        let truncatedTemperature = Int(viewModel.currentTemperature)
-        temperatureLabel.text = "\(truncatedTemperature)º"
-        summaryLabel.text = viewModel.currentSummary
     }
 }

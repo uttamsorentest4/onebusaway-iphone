@@ -11,7 +11,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface OBAUIBuilder : NSObject
-+ (UILabel*)label;
++ (UILabel*)autolayoutLabel;
 + (UIView*)footerViewWithText:(NSString*)text maximumWidth:(CGFloat)width;
 + (UIView*)lineView;
 

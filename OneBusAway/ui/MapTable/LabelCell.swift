@@ -16,21 +16,8 @@ import IGListKit
 import UIKit
 
 final class LabelCell: UICollectionViewCell {
-
     fileprivate static let insets = UIEdgeInsets(top: 8, left: 15, bottom: 8, right: 15)
     fileprivate static let font = UIFont.systemFont(ofSize: 17)
-
-    static var singleLineHeight: CGFloat {
-        return font.lineHeight + insets.top + insets.bottom
-    }
-
-    static func textHeight(_ text: String, width: CGFloat) -> CGFloat {
-        let constrainedSize = CGSize(width: width - insets.left - insets.right, height: CGFloat.greatestFiniteMagnitude)
-        let attributes = [ NSAttributedStringKey.font: font ]
-        let options: NSStringDrawingOptions = [.usesFontLeading, .usesLineFragmentOrigin]
-        let bounds = (text as NSString).boundingRect(with: constrainedSize, options: options, attributes: attributes, context: nil)
-        return ceil(bounds.height) + insets.top + insets.bottom
-    }
 
     fileprivate let label: UILabel = {
         let label = UILabel()
@@ -58,6 +45,9 @@ final class LabelCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         contentView.addSubview(label)
+        label.snp.makeConstraints { (make) in
+            make.edges.equalToSuperview().inset(LabelCell.insets)
+        }
         contentView.layer.addSublayer(separator)
         contentView.backgroundColor = OBATheme.mapTableBackgroundColor
     }
@@ -69,7 +59,6 @@ final class LabelCell: UICollectionViewCell {
     override func layoutSubviews() {
         super.layoutSubviews()
         let bounds = contentView.bounds
-        label.frame = UIEdgeInsetsInsetRect(bounds, LabelCell.insets)
         let height: CGFloat = 0.5
         let left = LabelCell.insets.left
         separator.frame = CGRect(x: left, y: bounds.height - height, width: bounds.width - left, height: height)
@@ -80,13 +69,4 @@ final class LabelCell: UICollectionViewCell {
 //            contentView.backgroundColor = UIColor(white: isHighlighted ? 0.9 : 1, alpha: 1)
         }
     }
-}
-
-extension LabelCell: ListBindable {
-
-    func bindViewModel(_ viewModel: Any) {
-        guard let viewModel = viewModel as? String else { return }
-        label.text = viewModel
-    }
-
 }

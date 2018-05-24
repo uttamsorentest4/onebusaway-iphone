@@ -1,16 +1,17 @@
 //
-//  ForecastSectionController.swift
+//  StopSectionController.swift
 //  OneBusAway
 //
-//  Created by Aaron Brethorst on 5/21/18.
+//  Created by Aaron Brethorst on 5/23/18.
 //  Copyright © 2018 OneBusAway. All rights reserved.
 //
 
-import IGListKit
 import UIKit
+import IGListKit
+import OBAKit
 
-class ForecastSectionController: ListSectionController {
-    var data: WeatherForecast?
+class StopSectionController: ListSectionController {
+    var data: StopViewModel?
 
     override init() {
         super.init()
@@ -25,17 +26,17 @@ class ForecastSectionController: ListSectionController {
         guard
             let ctx = collectionContext,
             let data = data,
-            let cell = ctx.dequeueReusableCell(of: WeatherCell.self, for: self, at: index) as? WeatherCell
+            let cell = ctx.dequeueReusableCell(of: StopCell.self, for: self, at: index) as? StopCell
             else {
                 fatalError()
         }
-        cell.forecast = data
+        cell.stopViewModel = data
 
         return cell
     }
 
     override func didUpdate(to object: Any) {
-        precondition(object is WeatherForecast)
-        data = object as? WeatherForecast
+        precondition(object is StopViewModel)
+        data = object as? StopViewModel
     }
 }

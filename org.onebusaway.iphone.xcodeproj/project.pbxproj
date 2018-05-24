@@ -141,6 +141,10 @@
 		934198B51DB0C219004BBBB7 /* OBAVehicleStatusV2_Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = 9341987D1DB0C219004BBBB7 /* OBAVehicleStatusV2_Tests.m */; };
 		934198B61DB0C219004BBBB7 /* OBADataSourceConfig_Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = 9341987F1DB0C219004BBBB7 /* OBADataSourceConfig_Tests.m */; };
 		934198CD1DB0C578004BBBB7 /* OBAKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 934198CA1DB0C56D004BBBB7 /* OBAKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		9341B82220B65DF9006450FC /* SelfSizingCollectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9341B82120B65DF8006450FC /* SelfSizingCollectionCell.swift */; };
+		9341B82420B66FB0006450FC /* StopCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9341B82320B66FB0006450FC /* StopCell.swift */; };
+		9341B82720B66FDE006450FC /* StopSectionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9341B82620B66FDE006450FC /* StopSectionController.swift */; };
+		9341B82920B683A5006450FC /* StopViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9341B82820B683A5006450FC /* StopViewModel.swift */; };
 		934C50A01E2B69E300DFDCA0 /* GKActionSheetPicker.m in Sources */ = {isa = PBXBuildFile; fileRef = 934C509D1E2B69E300DFDCA0 /* GKActionSheetPicker.m */; };
 		934C50A11E2B69E300DFDCA0 /* GKActionSheetPickerItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 934C509F1E2B69E300DFDCA0 /* GKActionSheetPickerItem.m */; };
 		934C50AE1E2B6D5B00DFDCA0 /* OBAPushManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 934C50AD1E2B6D5B00DFDCA0 /* OBAPushManager.m */; };
@@ -475,6 +479,10 @@
 		9341987D1DB0C219004BBBB7 /* OBAVehicleStatusV2_Tests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OBAVehicleStatusV2_Tests.m; sourceTree = "<group>"; };
 		9341987F1DB0C219004BBBB7 /* OBADataSourceConfig_Tests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OBADataSourceConfig_Tests.m; sourceTree = "<group>"; };
 		934198C41DB0C56D004BBBB7 /* OBAKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = OBAKit.xcodeproj; path = OBAKit/OBAKit.xcodeproj; sourceTree = "<group>"; };
+		9341B82120B65DF8006450FC /* SelfSizingCollectionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelfSizingCollectionCell.swift; sourceTree = "<group>"; };
+		9341B82320B66FB0006450FC /* StopCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StopCell.swift; sourceTree = "<group>"; };
+		9341B82620B66FDE006450FC /* StopSectionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StopSectionController.swift; sourceTree = "<group>"; };
+		9341B82820B683A5006450FC /* StopViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StopViewModel.swift; sourceTree = "<group>"; };
 		934445F81AB105FB005B3333 /* capitolhill.gpx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = capitolhill.gpx; sourceTree = "<group>"; };
 		9347860D1D3453E9002A5627 /* sandiego.gpx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = sandiego.gpx; sourceTree = "<group>"; };
 		934C509C1E2B69E300DFDCA0 /* GKActionSheetPicker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GKActionSheetPicker.h; sourceTree = "<group>"; };
@@ -780,6 +788,7 @@
 		934196E81DB0C13F004BBBB7 /* ui */ = {
 			isa = PBXGroup;
 			children = (
+				9341B81F20B65DDF006450FC /* listkit */,
 				93A1C68620B3F0D200E176DE /* MapTable */,
 				930CE4D81E9BFB440073F04D /* debugging */,
 				936EB1BB1E92F27400F4F3A7 /* onboarding */,
@@ -1314,6 +1323,24 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		9341B81F20B65DDF006450FC /* listkit */ = {
+			isa = PBXGroup;
+			children = (
+				9341B82120B65DF8006450FC /* SelfSizingCollectionCell.swift */,
+			);
+			path = listkit;
+			sourceTree = "<group>";
+		};
+		9341B82520B66FC6006450FC /* Stops */ = {
+			isa = PBXGroup;
+			children = (
+				9341B82320B66FB0006450FC /* StopCell.swift */,
+				9341B82620B66FDE006450FC /* StopSectionController.swift */,
+				9341B82820B683A5006450FC /* StopViewModel.swift */,
+			);
+			path = Stops;
+			sourceTree = "<group>";
+		};
 		934445F71AB105FB005B3333 /* gpx_files */ = {
 			isa = PBXGroup;
 			children = (
@@ -1401,6 +1428,7 @@
 		93A1C68620B3F0D200E176DE /* MapTable */ = {
 			isa = PBXGroup;
 			children = (
+				9341B82520B66FC6006450FC /* Stops */,
 				93A1C68820B3F62700E176DE /* Forecast */,
 				93C48E482096EF0F001FB95C /* MapTableViewController.swift */,
 				93A637E420A2CDE50005248C /* LabelCell.swift */,
@@ -1782,10 +1810,13 @@
 				9385EC401DCF1D910020CCB2 /* ServiceAlertDetailsViewController.swift in Sources */,
 				9341978C1DB0C140004BBBB7 /* RegionBuilderViewController.swift in Sources */,
 				933546DD1E834ABE00D83519 /* OBAMessageRow.m in Sources */,
+				9341B82420B66FB0006450FC /* StopCell.swift in Sources */,
 				934197871DB0C140004BBBB7 /* OBACreditsViewController.m in Sources */,
 				934197921DB0C140004BBBB7 /* OBADiversionViewController.m in Sources */,
+				9341B82220B65DF9006450FC /* SelfSizingCollectionCell.swift in Sources */,
 				93A1C68A20B3F63F00E176DE /* ForecastSectionController.swift in Sources */,
 				934198211DB0C1BA004BBBB7 /* OBATextFieldTableViewCell.m in Sources */,
+				9341B82720B66FDE006450FC /* StopSectionController.swift in Sources */,
 				934197821DB0C140004BBBB7 /* OBAEditStopBookmarkViewController.m in Sources */,
 				9341982C1DB0C1D6004BBBB7 /* main.m in Sources */,
 				934C50AE1E2B6D5B00DFDCA0 /* OBAPushManager.m in Sources */,
@@ -1850,6 +1881,7 @@
 				931A6A291E03EAA100131242 /* OBATimelineBarRow.m in Sources */,
 				93A637E320A2CDDC0005248C /* CenterLabelCell.swift in Sources */,
 				934196E21DB0C124004BBBB7 /* MKMapView+oba_Additions.m in Sources */,
+				9341B82920B683A5006450FC /* StopViewModel.swift in Sources */,
 				9383FCB020AF6FEA007347B2 /* BottomSweepSectionController.swift in Sources */,
 				934198171DB0C1BA004BBBB7 /* OBARotatingButton.m in Sources */,
 				930CE4DB1E9BFB590073F04D /* UserDefaultsBrowserViewController.swift in Sources */,
