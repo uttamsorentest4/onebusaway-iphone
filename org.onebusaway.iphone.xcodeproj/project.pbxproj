@@ -206,6 +206,7 @@
 		93C3936B1D8A3A4D0080F370 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 93C3936A1D8A3A4D0080F370 /* UIKit.framework */; };
 		93C3936D1D8A3A530080F370 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 93C3936C1D8A3A530080F370 /* Foundation.framework */; };
 		93C48E492096EF0F001FB95C /* MapTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93C48E482096EF0F001FB95C /* MapTableViewController.swift */; };
+		93D5480520B778F700334939 /* SectionHeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93D5480420B778F700334939 /* SectionHeaderCell.swift */; };
 		93EBB9BC20B283F900B31DA8 /* OBAWeatherForecast_Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = 93EBB9BB20B283F900B31DA8 /* OBAWeatherForecast_Tests.m */; };
 		93EBB9C120B28F2B00B31DA8 /* weather.json in Resources */ = {isa = PBXBuildFile; fileRef = 93EBB9BF20B28A3800B31DA8 /* weather.json */; };
 		93F3F88E1E7A7B2D0025FC78 /* RegionalAlertsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93F3F88D1E7A7B2D0025FC78 /* RegionalAlertsViewController.swift */; };
@@ -571,6 +572,7 @@
 		93C3936A1D8A3A4D0080F370 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		93C3936C1D8A3A530080F370 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		93C48E482096EF0F001FB95C /* MapTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapTableViewController.swift; sourceTree = "<group>"; };
+		93D5480420B778F700334939 /* SectionHeaderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SectionHeaderCell.swift; sourceTree = "<group>"; };
 		93E4A7611CE65B2100E769B0 /* atlanta.gpx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = atlanta.gpx; sourceTree = "<group>"; };
 		93EBB9BB20B283F900B31DA8 /* OBAWeatherForecast_Tests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OBAWeatherForecast_Tests.m; sourceTree = "<group>"; };
 		93EBB9BF20B28A3800B31DA8 /* weather.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = weather.json; sourceTree = "<group>"; };
@@ -1327,6 +1329,7 @@
 			isa = PBXGroup;
 			children = (
 				9341B82120B65DF8006450FC /* SelfSizingCollectionCell.swift */,
+				93D5480420B778F700334939 /* SectionHeaderCell.swift */,
 			);
 			path = listkit;
 			sourceTree = "<group>";
@@ -1894,6 +1897,7 @@
 				936EB1C11E92F30C00F4F3A7 /* OnboardingViewController.swift in Sources */,
 				9341981F1DB0C1BA004BBBB7 /* OBALabelAndTextFieldTableViewCell.m in Sources */,
 				935C39151F7707FF00737DC4 /* AlertPresenterView.swift in Sources */,
+				93D5480520B778F700334939 /* SectionHeaderCell.swift in Sources */,
 				9368E5C01DB1584900C329D0 /* OBAEmptyDataSetSource.m in Sources */,
 				934198241DB0C1BA004BBBB7 /* OBATextEditViewController.m in Sources */,
 				93F9574A1E9AFB020022586B /* UIWindow+OBAAdditions.m in Sources */,

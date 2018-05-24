@@ -155,7 +155,10 @@ extension MapTableViewController: ListAdapterDataSource {
             sections.append(forecast)
         }
 
-        let stopViewModels: [StopViewModel] = stops.map { StopViewModel.init(name: $0.name, stopID: $0.stopId, direction: $0.direction) }
+        sections.append(SectionHeader(text: NSLocalizedString("msg_nearby_stops", comment: "Nearby Stops text")))
+        let stopViewModels: [StopViewModel] = stops.map {
+            StopViewModel.init(name: $0.name, stopID: $0.stopId, direction: $0.direction, routeNames: $0.routeNamesAsString())
+        }
         sections.append(contentsOf: stopViewModels)
 
         sections.append(Sweep())
@@ -179,8 +182,8 @@ extension MapTableViewController: ListAdapterDataSource {
             return ForecastSectionController()
         case is StopViewModel:
             return StopSectionController()
-        case is String:
-            return DisplaySectionController()
+        case is SectionHeader:
+            return SectionHeaderSectionController()
         default:
             fatalError()
         }

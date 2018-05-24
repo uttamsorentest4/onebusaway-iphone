@@ -13,12 +13,13 @@ class StopViewModel: NSObject {
     let name: String
     let stopID: String
     let direction: String
+    let routeNames: String
 
-    init(name: String, stopID: String, direction: String) {
+    init(name: String, stopID: String, direction: String, routeNames: String) {
         self.name = name
         self.stopID = stopID
         self.direction = direction
-        super.init()
+        self.routeNames = routeNames
     }
 }
 
@@ -40,6 +41,9 @@ extension StopViewModel: ListDiffable {
     func isEqual(toDiffableObject object: ListDiffable?) -> Bool {
         guard self !== object else { return true }
         guard let object = object as? StopViewModel else { return false }
-        return name == object.name && stopID == object.stopID && direction == object.direction
+        return name == object.name
+            && stopID == object.stopID
+            && direction == object.direction
+            && routeNames == object.routeNames
     }
 }

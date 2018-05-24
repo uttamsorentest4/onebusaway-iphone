@@ -16,17 +16,49 @@ class StopCell: SelfSizingCollectionCell {
             guard let stop = stopViewModel else {
                 return
             }
-            label.text = stop.nameWithDirection
+            nameLabel.text = stop.nameWithDirection
+            routesLabel.text = stop.routeNames
         }
     }
 
-    fileprivate let label: UILabel = {
+    fileprivate static let leftRightInsets = UIEdgeInsetsMake(0, OBATheme.defaultPadding, 0, OBATheme.defaultPadding)
+
+    fileprivate let nameLabel: UILabel = {
         let lbl = UILabel.init()
         lbl.backgroundColor = .white
+        lbl.setContentHuggingPriority(.defaultHigh, for: .vertical)
+        lbl.setContentCompressionResistancePriority(.required, for: .vertical)
 
         return lbl
     }()
 
+    fileprivate let routesLabel: UILabel = {
+        let lbl = UILabel()
+        lbl.backgroundColor = .white
+        lbl.font = OBATheme.footnoteFont
+        lbl.setContentHuggingPriority(.defaultHigh, for: .vertical)
+        lbl.setContentCompressionResistancePriority(.required, for: .vertical)
+
+        return lbl
+    }()
+
+    fileprivate lazy var labelStack: UIStackView = {
+        let stack = UIStackView.init(arrangedSubviews: [nameLabel, routesLabel])
+        stack.axis = .vertical
+        return stack
+    }()
+
+    fileprivate lazy var labelStackWrapper: UIView = {
+        let plainWrapper = labelStack.oba_embedInWrapperView(withConstraints: false)
+        plainWrapper.backgroundColor = .white
+
+        labelStack.snp.makeConstraints { (make) in
+            make.height.greaterThanOrEqualTo(44)
+            make.edges.equalToSuperview().inset(StopCell.leftRightInsets)
+        }
+
+        return plainWrapper
+    }()
 
     let separator: CALayer = {
         let layer = CALayer()
@@ -38,20 +70,10 @@ class StopCell: SelfSizingCollectionCell {
         super.init(frame: frame)
         backgroundColor = OBATheme.mapTableBackgroundColor
 
-        let plainWrapper = label.oba_embedInWrapperView(withConstraints: false)
-        plainWrapper.backgroundColor = .white
-        let cardWrapper = plainWrapper.oba_embedInCardWrapper()
-
-        let leftRightInsets = UIEdgeInsetsMake(0, OBATheme.defaultPadding, 0, OBATheme.defaultPadding)
-
-        label.snp.makeConstraints { (make) in
-            make.height.greaterThanOrEqualTo(44)
-            make.edges.equalToSuperview().inset(leftRightInsets)
-        }
-
+        let cardWrapper = labelStackWrapper.oba_embedInCardWrapper()
         contentView.addSubview(cardWrapper)
         cardWrapper.snp.makeConstraints { make in
-            make.edges.equalToSuperview().inset(leftRightInsets)
+            make.edges.equalToSuperview().inset(StopCell.leftRightInsets)
         }
 
         contentView.layer.addSublayer(separator)

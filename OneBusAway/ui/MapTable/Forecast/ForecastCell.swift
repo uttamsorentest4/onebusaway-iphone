@@ -68,9 +68,9 @@ class ForecastCell: SelfSizingCollectionCell {
 
         layer.masksToBounds = false
         layer.shadowColor = UIColor.black.cgColor
-        layer.shadowRadius = 2.0
-        layer.shadowOffset = .zero
-        layer.shadowOpacity = 0.5
+        layer.shadowRadius = 1.0
+        layer.shadowOffset = CGSize(width: 0, height: -2)
+        layer.shadowOpacity = 0.2
     }
 
     required init?(coder aDecoder: NSCoder) { fatalError("init(coder:) has not been implemented") }
