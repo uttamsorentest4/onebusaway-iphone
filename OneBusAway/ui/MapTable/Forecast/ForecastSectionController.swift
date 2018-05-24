@@ -25,7 +25,7 @@ class ForecastSectionController: ListSectionController {
         guard
             let ctx = collectionContext,
             let data = data,
-            let cell = ctx.dequeueReusableCell(of: WeatherCell.self, for: self, at: index) as? WeatherCell
+            let cell = ctx.dequeueReusableCell(of: ForecastCell.self, for: self, at: index) as? ForecastCell
             else {
                 fatalError()
         }

@@ -1,5 +1,5 @@
 //
-//  WeatherCell.swift
+//  ForecastCell.swift
 //  OneBusAway
 //
 //  Created by Aaron Brethorst on 5/22/18.
@@ -10,7 +10,7 @@ import OBAKit
 import UIKit
 import SnapKit
 
-class WeatherCell: SelfSizingCollectionCell {
+class ForecastCell: SelfSizingCollectionCell {
 
     // MARK: - Properties
     fileprivate static let titleFont = OBATheme.largeTitleFont!
@@ -20,7 +20,7 @@ class WeatherCell: SelfSizingCollectionCell {
         let label = UILabel()
         label.backgroundColor = .white
         label.numberOfLines = 1
-        label.font = WeatherCell.titleFont
+        label.font = ForecastCell.titleFont
         return label
     }()
 
@@ -28,7 +28,7 @@ class WeatherCell: SelfSizingCollectionCell {
         let label = UILabel()
         label.backgroundColor = .white
         label.numberOfLines = 1
-        label.font = WeatherCell.summaryFont
+        label.font = ForecastCell.summaryFont
         return label
     }()
 
@@ -53,11 +53,11 @@ class WeatherCell: SelfSizingCollectionCell {
 
         let outerStack = UIStackView.init(arrangedSubviews: [weatherImageView, labelWrapper])
         outerStack.axis = .horizontal
-        let outerWrapper = outerStack.oba_embedInWrapper()
+        let outerWrapper = outerStack.oba_embedInCardWrapper()
 
         contentView.addSubview(outerWrapper)
         outerWrapper.snp.makeConstraints { make in
-            make.edges.equalToSuperview()
+            make.edges.equalToSuperview().inset(OBATheme.defaultEdgeInsets)
         }
 
         contentView.backgroundColor = OBATheme.mapTableBackgroundColor
