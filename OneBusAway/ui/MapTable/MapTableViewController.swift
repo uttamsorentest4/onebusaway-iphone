@@ -39,6 +39,8 @@ class MapTableViewController: UIViewController {
         }
     }
 
+    var centerCoordinate: CLLocationCoordinate2D?
+
     var application: OBAApplication
     var locationManager: OBALocationManager
     var mapDataLoader: OBAMapDataLoader
@@ -210,13 +212,27 @@ extension MapTableViewController {
 // MARK: - Map Data Loader
 extension MapTableViewController: OBAMapDataLoaderDelegate {
     func mapDataLoader(_ mapDataLoader: OBAMapDataLoader, didUpdate searchResult: OBASearchResult) {
-        stops = searchResult.values.filter { $0 is OBAStopV2 } as! [OBAStopV2]
+        let unsortedStops = searchResult.values.filter { $0 is OBAStopV2 } as! [OBAStopV2]
+        stops = sort(stops: unsortedStops, byDistanceTo: centerCoordinate)
+    }
+
+    // TODO: DRY me up with identical function in NearbyStopsViewController
+    fileprivate func sort(stops: [OBAStopV2], byDistanceTo coordinate: CLLocationCoordinate2D?) -> [OBAStopV2] {
+        guard let coordinate = coordinate else {
+            return stops
+        }
+
+        return stops.sorted { (s1, s2) -> Bool in
+            let distance1 = OBAMapHelpers.getDistanceFrom(s1.coordinate, to: coordinate)
+            let distance2 = OBAMapHelpers.getDistanceFrom(s2.coordinate, to: coordinate)
+            return distance1 < distance2
+        }
     }
 }
 
 // MARK: - Map Region Delegate
 extension MapTableViewController: OBAMapRegionDelegate {
     func mapRegionManager(_ manager: OBAMapRegionManager, setRegion region: MKCoordinateRegion, animated: Bool) {
-        //
+        self.centerCoordinate = region.center
     }
 }
