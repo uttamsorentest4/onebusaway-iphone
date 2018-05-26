@@ -30,13 +30,28 @@
     self.modelFactory = [[OBAModelFactory alloc] initWithReferences:references];
 }
 
-- (void)tearDown {
-    // Put teardown code here. This method is called after the invocation of each test method in the class.
-    [super tearDown];
+- (void)testVerifyLoadingOldObjectFromCoding {
+    OBAStopAccessEventV2 *archivedObject = [OBATestHelpers unarchiveBundledTestFile:@"RecentStopWithStopIDs.plist"];
+    XCTAssertEqualObjects(archivedObject.title, @"I am a title");
+    XCTAssertEqualObjects(archivedObject.subtitle, @"I am a subtitle");
+    XCTAssertEqualObjects(archivedObject.stopID, @"12345");
 }
 
-- (void)testExample {
-    XCTAssertTrue(YES);
+- (void)testVerifyRoundtrippingOldObjectFromCoding {
+    OBAStopAccessEventV2 *archivedObject = [OBATestHelpers unarchiveBundledTestFile:@"RecentStopWithStopIDs.plist"];
+    OBAStopAccessEventV2 *archivedObject2 = [OBATestHelpers roundtripObjectThroughNSCoding:archivedObject];
+
+    XCTAssertEqualObjects(archivedObject2.title, @"I am a title");
+    XCTAssertEqualObjects(archivedObject2.subtitle, @"I am a subtitle");
+    XCTAssertEqualObjects(archivedObject2.stopID, @"12345");
+}
+
+- (void)testVerifyLoadingNewObjectFromCoding {
+    OBAStopAccessEventV2 *archivedObject = [OBATestHelpers unarchiveBundledTestFile:@"RecentStopWithStopID.plist"];
+
+    XCTAssertEqualObjects(archivedObject.title, @"I am a title");
+    XCTAssertEqualObjects(archivedObject.subtitle, @"I am a subtitle");
+    XCTAssertEqualObjects(archivedObject.stopID, @"98765");
 }
 
 @end

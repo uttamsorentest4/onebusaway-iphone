@@ -21,8 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface OBAStopAccessEventV2 : NSObject<NSCoding>
 @property(nonatomic,copy) NSString *title;
 @property(nonatomic,copy) NSString *subtitle;
-@property(nonatomic,copy) NSArray *stopIds;
-@property(nonatomic,copy,readonly) NSString *stopID;
+@property(nonatomic,copy) NSString *stopID;
 @end
 
 NS_ASSUME_NONNULL_END

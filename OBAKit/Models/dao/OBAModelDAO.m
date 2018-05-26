@@ -503,30 +503,27 @@ const NSInteger kMaxEntriesInMostRecentList = 10;
 }
 
 - (void)addStopAccessEvent:(OBAStopAccessEventV2*)event {
+    OBAStopAccessEventV2 *recentStop = nil;
 
-    OBAStopAccessEventV2 * existingEvent = nil;
-
-    NSArray * stopIds = event.stopIds;
-
-    for (OBAStopAccessEventV2 * stopEvent in _mostRecentStops) {
-        if ([stopEvent.stopIds isEqual:stopIds]) {
-            existingEvent = stopEvent;
+    for (OBAStopAccessEventV2 *stopEvent in _mostRecentStops) {
+        if ([stopEvent.stopID isEqual:event.stopID]) {
+            recentStop = stopEvent;
             break;
         }
     }
 
-    if (existingEvent) {
-        [_mostRecentStops removeObject:existingEvent];
-        [_mostRecentStops insertObject:existingEvent atIndex:0];
+    if (recentStop) {
+        [_mostRecentStops removeObject:recentStop];
+        [_mostRecentStops insertObject:recentStop atIndex:0];
     }
     else {
-        existingEvent = [[OBAStopAccessEventV2 alloc] init];
-        existingEvent.stopIds = stopIds;
-        [_mostRecentStops insertObject:existingEvent atIndex:0];
+        recentStop = [[OBAStopAccessEventV2 alloc] init];
+        recentStop.stopID = event.stopID;
+        [_mostRecentStops insertObject:recentStop atIndex:0];
     }
 
-    existingEvent.title = event.title;
-    existingEvent.subtitle = event.subtitle;
+    recentStop.title = event.title;
+    recentStop.subtitle = event.subtitle;
 
     NSInteger over = [_mostRecentStops count] - kMaxEntriesInMostRecentList;
     for (int i=0; i<over; i++) {
@@ -543,7 +540,7 @@ const NSInteger kMaxEntriesInMostRecentList = 10;
     }
 
     OBAStopAccessEventV2 * event = [[OBAStopAccessEventV2 alloc] init];
-    event.stopIds = @[stop.stopId];
+    event.stopID = stop.stopId;
     event.title = stop.title;
     event.subtitle = stop.subtitle;
     [self addStopAccessEvent:event];

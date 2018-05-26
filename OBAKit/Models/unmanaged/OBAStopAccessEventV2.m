@@ -25,9 +25,22 @@
     self = [super init];
     if (self) {
         _title = [coder oba_decodeObject:@selector(title)];
-        _title = [coder oba_decodeObject:@selector(title)];
         _subtitle = [coder oba_decodeObject:@selector(subtitle)];
-        _stopIds = [coder oba_decodeObject:@selector(stopIds)];
+
+        //
+        // TODO: eliminate this compatibility code in, say, 2020.
+        //
+        // Up until 18.2.0, it was possible to encode multiple stop IDs
+        // within a single stop access event object. However, this functionality
+        // was limited to a single stop ID. As a result, we need to account
+        // for this for the foreseeable future.
+        NSArray *stopIds = [coder decodeObjectForKey:@"stopIds"];
+        if (stopIds.count > 0) {
+            _stopID = [stopIds firstObject];
+        }
+        else {
+            _stopID = [coder oba_decodeObject:@selector(stopID)];
+        }
     }
     return self;
 }
@@ -35,13 +48,7 @@
 - (void)encodeWithCoder:(NSCoder*)coder {
     [coder oba_encodePropertyOnObject:self withSelector:@selector(title)];
     [coder oba_encodePropertyOnObject:self withSelector:@selector(subtitle)];
-    [coder oba_encodePropertyOnObject:self withSelector:@selector(stopIds)];
-}
-
-#pragma mark - Public Helpers
-
-- (NSString*)stopID {
-    return self.stopIds.firstObject;
+    [coder oba_encodePropertyOnObject:self withSelector:@selector(stopID)];
 }
 
 #pragma mark - Equality
@@ -59,7 +66,7 @@
 }
 
 - (NSUInteger)hash {
-    return [NSString stringWithFormat:@"%@_%@_%@", self.title, self.subtitle, [self.stopIds componentsJoinedByString:@"_"]].hash;
+    return [NSString stringWithFormat:@"%@_%@_%@", self.title, self.subtitle, self.stopID].hash;
 }
 
 @end

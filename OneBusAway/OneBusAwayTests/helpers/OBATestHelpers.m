@@ -48,6 +48,7 @@
 + (id)unarchiveBundledTestFile:(NSString*)fileName {
     NSString *filePath = [OBATestHelpers pathToTestFile:fileName];
     NSData *data = [[NSData alloc] initWithContentsOfFile:filePath];
+    assert(data.length > 0);
     return [NSKeyedUnarchiver unarchiveObjectWithData:data];
 }
 
