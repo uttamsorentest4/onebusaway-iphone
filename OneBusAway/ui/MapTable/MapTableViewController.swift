@@ -153,15 +153,28 @@ extension MapTableViewController: ListAdapterDataSource {
     func objects(for listAdapter: ListAdapter) -> [ListDiffable] {
         var sections: [ListDiffable] = []
 
+        // Forecast
+
         if let forecast = weatherForecast {
             sections.append(forecast)
         }
+
+        // Recent Stops
+        let recentNearbyStops = buildNearbyRecentStopViewModels()
+        if recentNearbyStops.count > 0 {
+            sections.append(SectionHeader(text: NSLocalizedString("map_search.recent_stops_section_title", comment: "Recent Stops")))
+            sections.append(contentsOf: recentNearbyStops)
+        }
+
+        // Nearby Stops
 
         sections.append(SectionHeader(text: NSLocalizedString("msg_nearby_stops", comment: "Nearby Stops text")))
         let stopViewModels: [StopViewModel] = stops.map {
             StopViewModel.init(name: $0.name, stopID: $0.stopId, direction: $0.direction, routeNames: $0.routeNamesAsString())
         }
         sections.append(contentsOf: stopViewModels)
+
+        // Bottom Sweep
 
         sections.append(Sweep())
 
@@ -189,6 +202,23 @@ extension MapTableViewController: ListAdapterDataSource {
         default:
             fatalError()
         }
+    }
+
+    private func buildNearbyRecentStopViewModels(pick upTo: Int = 2) -> [StopViewModel] {
+        guard let centerCoordinate = centerCoordinate else {
+            return []
+        }
+
+        let nearbyRecentStops: [OBAStopAccessEventV2] = modelDAO.recentStopsNearCoordinate(centerCoordinate)
+        guard nearbyRecentStops.count > 0 else {
+            return []
+        }
+
+        let viewModels: [StopViewModel] = nearbyRecentStops.map {
+            StopViewModel.init(name: $0.title, stopID: $0.stopID, direction: "DIR_TBD", routeNames: $0.subtitle)
+        }
+
+        return Array(viewModels.prefix(upTo))
     }
 }
 
