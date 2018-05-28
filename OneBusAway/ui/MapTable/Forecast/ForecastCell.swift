@@ -12,65 +12,35 @@ import SnapKit
 
 class ForecastCell: SelfSizingCollectionCell {
 
-    // MARK: - Properties
-    fileprivate static let titleFont = OBATheme.largeTitleFont!
-    fileprivate static let summaryFont = OBATheme.footnoteFont!
-
-    fileprivate let temperatureLabel: UILabel = {
-        let label = UILabel()
-        label.backgroundColor = .white
-        label.numberOfLines = 1
-        label.font = ForecastCell.titleFont
-        label.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
-        label.setContentCompressionResistancePriority(.required, for: .vertical)
-        label.setContentHuggingPriority(.defaultLow, for: .horizontal)
-        label.setContentHuggingPriority(.defaultHigh, for: .vertical)
-        return label
-    }()
-
-    fileprivate let summaryLabel: UILabel = {
-        let label = UILabel()
-        label.backgroundColor = .white
-        label.numberOfLines = 1
-        label.font = ForecastCell.summaryFont
-        return label
-    }()
-
-    fileprivate let weatherImageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.contentMode = .scaleAspectFit
-        imageView.backgroundColor = .white
-        imageView.snp.makeConstraints { make in
-            make.width.height.equalTo(44)
-        }
-        return imageView
-    }()
+    let foregroundColor = UIColor.darkText
 
     // MARK: - Init
 
     override init(frame: CGRect) {
         super.init(frame: frame)
 
-        let labelStack = UIStackView.init(arrangedSubviews: [temperatureLabel, summaryLabel, UIView()])
+        let topStack = UIStackView.init(arrangedSubviews: [weatherImageView, temperatureLabel, UIView()])
+        topStack.axis = .horizontal
+        let topStackWrapper = topStack.oba_embedInWrapper()
+
+        let labelStack = UIStackView.init(arrangedSubviews: [topStackWrapper, summaryLabel])
         labelStack.axis = .vertical
-        let labelWrapper = labelStack.oba_embedInWrapper()
 
-        let outerStack = UIStackView.init(arrangedSubviews: [weatherImageView, labelWrapper])
-        outerStack.axis = .horizontal
-        let outerWrapper = outerStack.oba_embedInCardWrapper()
-
+        let outerWrapper = labelStack.oba_embedInWrapper()
         contentView.addSubview(outerWrapper)
         outerWrapper.snp.makeConstraints { make in
-            make.edges.equalToSuperview().inset(OBATheme.defaultEdgeInsets)
+            make.top.trailing.bottom.equalToSuperview().inset(UIEdgeInsetsMake(0, 0, OBATheme.compactPadding, OBATheme.defaultPadding))
         }
 
-        contentView.backgroundColor = OBATheme.mapTableBackgroundColor
+        weatherImageView.tintColor = foregroundColor
+        temperatureLabel.textColor = foregroundColor
+        summaryLabel.textColor = foregroundColor
 
-        layer.masksToBounds = false
-        layer.shadowColor = UIColor.black.cgColor
-        layer.shadowRadius = 1.0
-        layer.shadowOffset = CGSize(width: 0, height: -2)
-        layer.shadowOpacity = 0.2
+        outerWrapper.backgroundColor = OBATheme.mapTableBackgroundColor.withAlphaComponent(0.8)
+        outerWrapper.layer.cornerRadius = OBATheme.compactPadding
+
+        backgroundColor = .clear
+        contentView.backgroundColor = .clear
     }
 
     required init?(coder aDecoder: NSCoder) { fatalError("init(coder:) has not been implemented") }
@@ -88,4 +58,38 @@ class ForecastCell: SelfSizingCollectionCell {
             weatherImageView.image = UIImage(named: forecast.currentSummaryIconName)
         }
     }
+
+    // MARK: - Properties
+    fileprivate static let titleFont = OBATheme.boldBodyFont!
+    fileprivate static let summaryFont = OBATheme.footnoteFont!
+
+    fileprivate let temperatureLabel: UILabel = {
+        let label = UILabel()
+        label.backgroundColor = .clear
+        label.numberOfLines = 1
+        label.font = ForecastCell.titleFont
+        label.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
+        label.setContentCompressionResistancePriority(.required, for: .vertical)
+        label.setContentHuggingPriority(.defaultLow, for: .horizontal)
+        label.setContentHuggingPriority(.defaultHigh, for: .vertical)
+        return label
+    }()
+
+    fileprivate let summaryLabel: UILabel = {
+        let label = UILabel()
+        label.backgroundColor = .clear
+        label.numberOfLines = 1
+        label.font = ForecastCell.summaryFont
+        return label
+    }()
+
+    fileprivate let weatherImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFit
+        imageView.backgroundColor = .clear
+        imageView.snp.makeConstraints { make in
+            make.width.height.equalTo(24)
+        }
+        return imageView
+    }()
 }
