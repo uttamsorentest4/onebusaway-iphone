@@ -502,48 +502,28 @@ const NSInteger kMaxEntriesInMostRecentList = 10;
     [[NSNotificationCenter defaultCenter] postNotificationName:OBAMostRecentStopsChangedNotification object:nil];
 }
 
-- (void)addStopAccessEvent:(OBAStopAccessEventV2*)event {
-    OBAStopAccessEventV2 *recentStop = nil;
-
-    for (OBAStopAccessEventV2 *stopEvent in _mostRecentStops) {
-        if ([stopEvent.stopID isEqual:event.stopID]) {
-            recentStop = stopEvent;
-            break;
-        }
-    }
-
-    if (recentStop) {
-        [_mostRecentStops removeObject:recentStop];
-        [_mostRecentStops insertObject:recentStop atIndex:0];
-    }
-    else {
-        recentStop = [[OBAStopAccessEventV2 alloc] init];
-        recentStop.stopID = event.stopID;
-        [_mostRecentStops insertObject:recentStop atIndex:0];
-    }
-
-    recentStop.title = event.title;
-    recentStop.subtitle = event.subtitle;
-
-    NSInteger over = [_mostRecentStops count] - kMaxEntriesInMostRecentList;
-    for (int i=0; i<over; i++) {
-        [_mostRecentStops removeObjectAtIndex:([_mostRecentStops count]-1)];
-    }
-
-    [_preferencesDao writeMostRecentStops:_mostRecentStops];
-    [[NSNotificationCenter defaultCenter] postNotificationName:OBAMostRecentStopsChangedNotification object:nil];
-}
-
 - (void)viewedArrivalsAndDeparturesForStop:(OBAStopV2*)stop {
     OBAGuard(stop) else {
         return;
     }
 
-    OBAStopAccessEventV2 * event = [[OBAStopAccessEventV2 alloc] init];
-    event.stopID = stop.stopId;
-    event.title = stop.title;
-    event.subtitle = stop.subtitle;
-    [self addStopAccessEvent:event];
+    for (OBAStopAccessEventV2 *stopEvent in _mostRecentStops) {
+        if ([stopEvent.stopID isEqual:stop.stopId]) {
+            [_mostRecentStops removeObject:stopEvent];
+            break;
+        }
+    }
+
+    OBAStopAccessEventV2 *recentStop = [[OBAStopAccessEventV2 alloc] initWithStop:stop];
+    [_mostRecentStops insertObject:recentStop atIndex:0];
+
+    NSInteger over = self.mostRecentStops.count - kMaxEntriesInMostRecentList;
+    for (NSInteger i=0; i<over; i++) {
+        [_mostRecentStops removeObjectAtIndex:_mostRecentStops.count - 1];
+    }
+
+    [_preferencesDao writeMostRecentStops:_mostRecentStops];
+    [[NSNotificationCenter defaultCenter] postNotificationName:OBAMostRecentStopsChangedNotification object:nil];
 }
 
 - (void)removeRecentStop:(OBAStopAccessEventV2*)recentStop {

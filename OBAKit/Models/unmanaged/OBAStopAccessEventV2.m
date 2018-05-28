@@ -15,11 +15,27 @@
  */
 
 #import <OBAKit/OBAStopAccessEventV2.h>
+#import <OBAKit/OBAStopV2.h>
 #import <OBAKit/NSCoder+OBAAdditions.h>
 
 #import <MapKit/MapKit.h>
 
 @implementation OBAStopAccessEventV2
+
+- (instancetype)initWithStop:(OBAStopV2*)stop {
+    self = [super init];
+
+    if (self) {
+        [self commonInit];
+
+        _title = [stop.title copy];
+        _subtitle = [stop.subtitle copy];
+        _stopID = [stop.stopId copy];
+        _coordinate = stop.coordinate;
+    }
+
+    return self;
+}
 
 - (instancetype)init {
     self = [super init];

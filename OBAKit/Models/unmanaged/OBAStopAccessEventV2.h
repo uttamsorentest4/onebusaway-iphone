@@ -17,6 +17,8 @@
 @import Foundation;
 @import CoreLocation;
 
+@class OBAStopV2;
+
 NS_ASSUME_NONNULL_BEGIN
 
 @interface OBAStopAccessEventV2 : NSObject<NSCoding>
@@ -27,6 +29,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic,assign,readonly) BOOL hasLocation;
 @property(nonatomic,assign) CLLocationCoordinate2D coordinate;
 
+- (instancetype)initWithStop:(OBAStopV2*)stop;
 @end
 
 NS_ASSUME_NONNULL_END
