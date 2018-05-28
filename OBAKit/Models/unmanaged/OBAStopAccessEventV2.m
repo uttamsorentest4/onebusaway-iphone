@@ -17,13 +17,30 @@
 #import <OBAKit/OBAStopAccessEventV2.h>
 #import <OBAKit/NSCoder+OBAAdditions.h>
 
+#import <MapKit/MapKit.h>
+
 @implementation OBAStopAccessEventV2
+
+- (instancetype)init {
+    self = [super init];
+
+    if (self) {
+        [self commonInit];
+    }
+    return self;
+}
+
+- (void)commonInit {
+    _coordinate = kCLLocationCoordinate2DInvalid;
+}
 
 #pragma mark - NSCoder Methods
 
 - (id)initWithCoder:(NSCoder*)coder {
     self = [super init];
     if (self) {
+        [self commonInit];
+
         _title = [coder oba_decodeObject:@selector(title)];
         _subtitle = [coder oba_decodeObject:@selector(subtitle)];
 
@@ -41,6 +58,10 @@
         else {
             _stopID = [coder oba_decodeObject:@selector(stopID)];
         }
+
+        if ([coder containsValueForKey:@"latitude"] && [coder containsValueForKey:@"longitude"]) {
+            _coordinate = CLLocationCoordinate2DMake([coder decodeDoubleForKey:@"latitude"], [coder decodeDoubleForKey:@"longitude"]);
+        }
     }
     return self;
 }
@@ -49,6 +70,17 @@
     [coder oba_encodePropertyOnObject:self withSelector:@selector(title)];
     [coder oba_encodePropertyOnObject:self withSelector:@selector(subtitle)];
     [coder oba_encodePropertyOnObject:self withSelector:@selector(stopID)];
+
+    if (self.hasLocation) {
+        [coder encodeDouble:_coordinate.latitude forKey:@"latitude"];
+        [coder encodeDouble:_coordinate.longitude forKey:@"longitude"];
+    }
+}
+
+#pragma mark - Location
+
+- (BOOL)hasLocation {
+    return CLLocationCoordinate2DIsValid(self.coordinate);
 }
 
 #pragma mark - Equality
@@ -62,11 +94,15 @@
         return NO;
     }
 
-    return self.hash == object.hash;
+    return [self.title isEqual:object.title]
+        && [self.subtitle isEqual:object.subtitle]
+        && [self.stopID isEqual:object.stopID]
+        && self.coordinate.latitude == object.coordinate.latitude
+        && self.coordinate.longitude == object.coordinate.longitude;
 }
 
 - (NSUInteger)hash {
-    return [NSString stringWithFormat:@"%@_%@_%@", self.title, self.subtitle, self.stopID].hash;
+    return [NSString stringWithFormat:@"%@_%@_%@_%@_%@", self.title, self.subtitle, self.stopID, @(self.coordinate.latitude), @(self.coordinate.longitude)].hash;
 }
 
 @end

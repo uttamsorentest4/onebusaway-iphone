@@ -15,6 +15,7 @@
  */
 
 @import Foundation;
+@import CoreLocation;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -22,6 +23,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic,copy) NSString *title;
 @property(nonatomic,copy) NSString *subtitle;
 @property(nonatomic,copy) NSString *stopID;
+
+@property(nonatomic,assign,readonly) BOOL hasLocation;
+@property(nonatomic,assign) CLLocationCoordinate2D coordinate;
+
 @end
 
 NS_ASSUME_NONNULL_END
