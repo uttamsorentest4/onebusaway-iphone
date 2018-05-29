@@ -33,7 +33,7 @@ class MapTableViewController: UIViewController {
         return collectionView
     }()
 
-    var stops: [OBAStopV2] = [] {
+    var stops: [OBAStopV2]? {
         didSet {
             adapter.performUpdates(animated: false)
         }
