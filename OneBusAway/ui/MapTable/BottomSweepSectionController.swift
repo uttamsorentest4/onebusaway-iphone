@@ -37,11 +37,6 @@ final class Sweep: NSObject, ListDiffable {
 final class BottomSweepSectionController: ListSectionController {
     private var sweep: Sweep = Sweep(height: 0)
 
-    override init() {
-        super.init()
-        self.inset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
-    }
-
     override func sizeForItem(at index: Int) -> CGSize {
         let width = collectionContext?.containerSize.width ?? 0
         return CGSize(width: width, height: sweep.height)

@@ -151,6 +151,10 @@ extension MapTableViewController {
 // MARK: - ListAdapterDataSource
 extension MapTableViewController: ListAdapterDataSource {
     func objects(for listAdapter: ListAdapter) -> [ListDiffable] {
+        guard application.isServerReachable else {
+            return [OfflineSection(), Sweep()]
+        }
+
         var sections: [ListDiffable] = []
 
         // Forecast
@@ -168,11 +172,17 @@ extension MapTableViewController: ListAdapterDataSource {
 
         // Nearby Stops
 
-        sections.append(SectionHeader(text: NSLocalizedString("msg_nearby_stops", comment: "Nearby Stops text")))
-        let stopViewModels: [StopViewModel] = stops.map {
-            StopViewModel.init(name: $0.name, stopID: $0.stopId, direction: $0.direction, routeNames: $0.routeNamesAsString())
+        if stops == nil {
+            sections.append(LoadingSection())
         }
-        sections.append(contentsOf: stopViewModels)
+        else {
+            sections.append(SectionHeader(text: NSLocalizedString("msg_nearby_stops", comment: "Nearby Stops text")))
+
+            let stopViewModels: [StopViewModel] = stops!.map {
+                StopViewModel.init(name: $0.name, stopID: $0.stopId, direction: $0.direction, routeNames: $0.routeNamesAsString())
+            }
+            sections.append(contentsOf: stopViewModels)
+        }
 
         // Bottom Sweep
 
@@ -191,14 +201,12 @@ extension MapTableViewController: ListAdapterDataSource {
 
     private func createSectionController(for object: Any) -> ListSectionController {
         switch object {
-        case is Sweep:
-            return BottomSweepSectionController()
-        case is WeatherForecast:
-            return ForecastSectionController()
-        case is StopViewModel:
-            return StopSectionController()
-        case is SectionHeader:
-            return SectionHeaderSectionController()
+        case is LoadingSection: return LoadingSectionController()
+        case is OfflineSection: return OfflineSectionController()
+        case is SectionHeader: return SectionHeaderSectionController()
+        case is StopViewModel: return StopSectionController()
+        case is Sweep: return BottomSweepSectionController()
+        case is WeatherForecast: return ForecastSectionController()
         default:
             fatalError()
         }

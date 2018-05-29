@@ -211,6 +211,8 @@
 		93EBB9C120B28F2B00B31DA8 /* weather.json in Resources */ = {isa = PBXBuildFile; fileRef = 93EBB9BF20B28A3800B31DA8 /* weather.json */; };
 		93EFFFB020B938F100B84DF4 /* RecentStopWithStopIDs.plist in Resources */ = {isa = PBXBuildFile; fileRef = 93EFFFAE20B938F000B84DF4 /* RecentStopWithStopIDs.plist */; };
 		93EFFFB220B93CD100B84DF4 /* RecentStopWithStopID.plist in Resources */ = {isa = PBXBuildFile; fileRef = 93EFFFB120B93CD100B84DF4 /* RecentStopWithStopID.plist */; };
+		93F1C26020BCD34B00B5032B /* LoadingCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93F1C25F20BCD34B00B5032B /* LoadingCell.swift */; };
+		93F1C26320BCDCCF00B5032B /* OfflineSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93F1C26220BCDCCF00B5032B /* OfflineSection.swift */; };
 		93F3F88E1E7A7B2D0025FC78 /* RegionalAlertsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93F3F88D1E7A7B2D0025FC78 /* RegionalAlertsViewController.swift */; };
 		93F3F8971E7AEE560025FC78 /* Mantle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 93F3F8961E7AEE560025FC78 /* Mantle.framework */; };
 		93F3F89F1E7BAC510025FC78 /* OBARegionalAlert_Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = 93F3F89E1E7BAC510025FC78 /* OBARegionalAlert_Tests.m */; };
@@ -580,6 +582,8 @@
 		93EBB9BF20B28A3800B31DA8 /* weather.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = weather.json; sourceTree = "<group>"; };
 		93EFFFAE20B938F000B84DF4 /* RecentStopWithStopIDs.plist */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = RecentStopWithStopIDs.plist; sourceTree = "<group>"; };
 		93EFFFB120B93CD100B84DF4 /* RecentStopWithStopID.plist */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = RecentStopWithStopID.plist; sourceTree = "<group>"; };
+		93F1C25F20BCD34B00B5032B /* LoadingCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingCell.swift; sourceTree = "<group>"; };
+		93F1C26220BCDCCF00B5032B /* OfflineSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OfflineSection.swift; sourceTree = "<group>"; };
 		93F3F88D1E7A7B2D0025FC78 /* RegionalAlertsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RegionalAlertsViewController.swift; sourceTree = "<group>"; };
 		93F3F8961E7AEE560025FC78 /* Mantle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Mantle.framework; path = Carthage/Build/iOS/Mantle.framework; sourceTree = "<group>"; };
 		93F3F89E1E7BAC510025FC78 /* OBARegionalAlert_Tests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OBARegionalAlert_Tests.m; sourceTree = "<group>"; };
@@ -1335,6 +1339,8 @@
 			children = (
 				9341B82120B65DF8006450FC /* SelfSizingCollectionCell.swift */,
 				93D5480420B778F700334939 /* SectionHeaderCell.swift */,
+				93F1C25F20BCD34B00B5032B /* LoadingCell.swift */,
+				93F1C26220BCDCCF00B5032B /* OfflineSection.swift */,
 			);
 			path = listkit;
 			sourceTree = "<group>";
@@ -1857,6 +1863,7 @@
 				930E41A21E5ECAA60040CEB5 /* MapSearchViewController.swift in Sources */,
 				931A6A2D1E03EAAE00131242 /* OBATimelineBarCell.m in Sources */,
 				934197801DB0C140004BBBB7 /* OBABookmarkRouteDisambiguationViewController.m in Sources */,
+				93F1C26320BCDCCF00B5032B /* OfflineSection.swift in Sources */,
 				93876DFB1E68AD3900B4343F /* OBAMapAnnotationViewBuilder.m in Sources */,
 				9341978B1DB0C140004BBBB7 /* OBARecentStopsViewController.m in Sources */,
 				934197A71DB0C140004BBBB7 /* OBAEditStopPreferencesViewController.m in Sources */,
@@ -1916,6 +1923,7 @@
 				93D5480520B778F700334939 /* SectionHeaderCell.swift in Sources */,
 				9368E5C01DB1584900C329D0 /* OBAEmptyDataSetSource.m in Sources */,
 				934198241DB0C1BA004BBBB7 /* OBATextEditViewController.m in Sources */,
+				93F1C26020BCD34B00B5032B /* LoadingCell.swift in Sources */,
 				93F9574A1E9AFB020022586B /* UIWindow+OBAAdditions.m in Sources */,
 				93A6E5241E6CB23500BEFECE /* ISHHoverBar.m in Sources */,
 				9341977F1DB0C140004BBBB7 /* OBABookmarkGroupsViewController.m in Sources */,
