@@ -8,6 +8,14 @@
 
 import UIKit
 
+/*
+
+ abxoxo TODO: replumb this with `systemLayoutSizeFitting` :(
+
+ https://gist.github.com/dhavalcue/4b081e65ded5c261d301beddbd2ddfcb
+
+ */
+
 class SelfSizingCollectionCell: UICollectionViewCell {
 
     override func preferredLayoutAttributesFitting(_ layoutAttributes: UICollectionViewLayoutAttributes) -> UICollectionViewLayoutAttributes {
@@ -35,5 +43,6 @@ class SelfSizingCollectionCell: UICollectionViewCell {
 
     required init?(coder aDecoder: NSCoder) { fatalError("init(coder:) has not been implemented") }
 
-    public static let insets = UIEdgeInsets(top: 8, left: 15, bottom: 8, right: 15)
+//    public static let insets = UIEdgeInsets(top: 8, left: 15, bottom: 8, right: 15)
+    public static let insets = UIEdgeInsets.zero
 }

@@ -104,13 +104,11 @@ extension MapTableViewController {
         super.viewDidLoad()
 
         oba_addChildViewController(mapController, to: mapContainer)
-        mapContainer.frame = view.bounds
-        mapContainer.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.addSubview(mapContainer)
 
         collectionView.backgroundColor = .clear
-
-        collectionView.contentInset = UIEdgeInsetsMake(Sweep.defaultHeight + 100, 0, 0, 0)
+        
+        collectionView.contentInset = UIEdgeInsetsMake(Sweep.defaultHeight, 0, 0, 0)
         collectionView.showsVerticalScrollIndicator = false
         collectionView.alwaysBounceVertical = true
 
@@ -127,7 +125,8 @@ extension MapTableViewController {
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        collectionView.frame = CGRect.init(x: 0, y: 0, width: view.bounds.width, height: view.bounds.height + Sweep.defaultHeight)
+        mapContainer.frame = CGRect(x: 0, y: 0, width: view.bounds.width, height: view.bounds.height - 100)
+        collectionView.frame = CGRect(x: 0, y: 0, width: view.bounds.width, height: view.bounds.height + Sweep.defaultHeight)
     }
 }
 
