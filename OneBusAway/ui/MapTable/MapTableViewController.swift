@@ -103,18 +103,29 @@ extension MapTableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        // We're doing some hacky-spectrum stuff with our content insets
+        // so we'll tell iOS to simply let us manage the insets without
+        // any intervention.
+        if #available(iOS 11.0, *) {
+            collectionView.contentInsetAdjustmentBehavior = .never
+        }
+        else {
+            automaticallyAdjustsScrollViewInsets = false
+        }
+
         oba_addChildViewController(mapController, to: mapContainer)
         view.addSubview(mapContainer)
 
         collectionView.backgroundColor = .clear
         
-        collectionView.contentInset = UIEdgeInsetsMake(Sweep.defaultHeight, 0, 0, 0)
+        collectionView.contentInset = UIEdgeInsetsMake(Sweep.defaultHeight(collectionViewBounds: view.bounds), 0, 0, 0)
         collectionView.showsVerticalScrollIndicator = false
         collectionView.alwaysBounceVertical = true
 
         view.addSubview(collectionView)
         adapter.collectionView = collectionView
         adapter.dataSource = self
+        adapter.scrollViewDelegate = self
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -125,8 +136,15 @@ extension MapTableViewController {
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        mapContainer.frame = CGRect(x: 0, y: 0, width: view.bounds.width, height: view.bounds.height - 100)
-        collectionView.frame = CGRect(x: 0, y: 0, width: view.bounds.width, height: view.bounds.height + Sweep.defaultHeight)
+        mapContainer.frame = CGRect(x: 0, y: 0, width: view.bounds.width, height: view.bounds.height)
+        collectionView.frame = CGRect(x: 0, y: 0, width: view.bounds.width, height: view.bounds.height + Sweep.defaultHeight(collectionViewBounds: view.bounds))
+    }
+}
+
+// MARK: - UIScrollViewDelegate
+extension MapTableViewController: UIScrollViewDelegate {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        print("Offset: \(scrollView.contentOffset.y)")
     }
 }
 
@@ -151,7 +169,7 @@ extension MapTableViewController {
 extension MapTableViewController: ListAdapterDataSource {
     func objects(for listAdapter: ListAdapter) -> [ListDiffable] {
         guard application.isServerReachable else {
-            return [OfflineSection(), Sweep()]
+            return [OfflineSection(), Sweep(collectionViewBounds: view.bounds)]
         }
 
         var sections: [ListDiffable] = []
@@ -185,7 +203,7 @@ extension MapTableViewController: ListAdapterDataSource {
 
         // Bottom Sweep
 
-        sections.append(Sweep())
+        sections.append(Sweep(collectionViewBounds: view.bounds))
 
         return sections
     }

@@ -13,12 +13,14 @@ import UIKit
 
 final class Sweep: NSObject, ListDiffable {
 
-    public static let defaultHeight: CGFloat = 300.0
+    public static func defaultHeight(collectionViewBounds: CGRect) -> CGFloat {
+        return collectionViewBounds.height - 200
+    }
 
     let height: CGFloat
 
-    convenience override init() {
-        self.init(height: Sweep.defaultHeight)
+    convenience init(collectionViewBounds: CGRect) {
+        self.init(height: Sweep.defaultHeight(collectionViewBounds: collectionViewBounds))
     }
 
     init(height: CGFloat) {
