@@ -154,25 +154,6 @@ extension DrawerApplicationUI: OBAApplicationUI {
     }
 }
 
-// MARK: - Pulley Controller
-extension DrawerApplicationUI: PulleyDrawerViewControllerDelegate {
-    func supportedDrawerPositions() -> [PulleyPosition] {
-        return [
-            .collapsed,
-            .partiallyRevealed,
-            .open
-        ]
-    }
-
-    func collapsedDrawerHeight(bottomSafeArea: CGFloat) -> CGFloat {
-        return 180
-    }
-
-    func partialRevealDrawerHeight(bottomSafeArea: CGFloat) -> CGFloat {
-        return 300
-    }
-}
-
 // MARK: - UITabBarControllerDelegate
 extension DrawerApplicationUI: UITabBarControllerDelegate {
     func tabBarController(_ tabBarController: UITabBarController, didSelect viewController: UIViewController) {

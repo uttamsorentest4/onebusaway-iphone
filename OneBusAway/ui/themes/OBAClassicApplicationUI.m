@@ -21,9 +21,6 @@ static NSString *kOBASelectedTabIndexDefaultsKey = @"OBASelectedTabIndexDefaults
 @interface OBAClassicApplicationUI ()<UITabBarControllerDelegate>
 @property(nonatomic, strong,readwrite) UITabBarController *tabBarController;
 
-// Map/Drawer/Nearby
-@property(nonatomic,strong) PulleyViewController *pulleyController;
-
 @property(nonatomic,strong) NearbyStopsViewController *nearbyStopsController;
 @property(nonatomic,strong) UINavigationController *nearbyStopsNavigation;
 
