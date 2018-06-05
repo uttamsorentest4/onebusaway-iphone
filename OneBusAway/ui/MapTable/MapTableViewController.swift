@@ -41,12 +41,22 @@ class MapTableViewController: UIViewController {
 
     var centerCoordinate: CLLocationCoordinate2D?
 
-    var application: OBAApplication
-    var locationManager: OBALocationManager
-    var mapDataLoader: OBAMapDataLoader
-    var mapRegionManager: OBAMapRegionManager
-    var modelDAO: OBAModelDAO
-    let modelService: PromisedModelService
+    fileprivate let application: OBAApplication
+    fileprivate let locationManager: OBALocationManager
+    fileprivate let mapDataLoader: OBAMapDataLoader
+    fileprivate let mapRegionManager: OBAMapRegionManager
+    fileprivate let modelDAO: OBAModelDAO
+    fileprivate let modelService: PromisedModelService
+
+    // MARK: - Regional Alerts
+
+    fileprivate let regionalAlertsManager: RegionalAlertsManager
+
+    fileprivate var regionalAlerts: [OBARegionalAlert] {
+        didSet {
+            adapter.performUpdates(animated: true)
+        }
+    }
 
     // MARK: - Weather
     var weatherForecast: WeatherForecast? {
@@ -70,11 +80,13 @@ class MapTableViewController: UIViewController {
 
     init(application: OBAApplication) {
         self.application = application
-        self.locationManager = application.locationManager
-        self.mapDataLoader = application.mapDataLoader
-        self.mapRegionManager = application.mapRegionManager
-        self.modelDAO = application.modelDao
-        self.modelService = application.modelService
+        locationManager = application.locationManager
+        mapDataLoader = application.mapDataLoader
+        mapRegionManager = application.mapRegionManager
+        modelDAO = application.modelDao
+        modelService = application.modelService
+        regionalAlertsManager = application.regionalAlertsManager
+        regionalAlerts = Array(regionalAlertsManager.regionalAlerts.prefix(3))
 
         self.mapController = OBAMapViewController.init(mapDataLoader: application.mapDataLoader, mapRegionManager: application.mapRegionManager)
         self.mapController.standaloneMode = false
@@ -128,6 +140,18 @@ extension MapTableViewController {
         adapter.scrollViewDelegate = self
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+
+        registerRegionalAlertNotifications()
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+
+        unregisterRegionalAlertNotifications()
+    }
+
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         refreshCurrentLocation()
@@ -165,6 +189,21 @@ extension MapTableViewController {
     }
 }
 
+// MARK: - Alerts
+extension MapTableViewController {
+    fileprivate func registerRegionalAlertNotifications() {
+        NotificationCenter.default.addObserver(self, selector: #selector(regionalAlertsUpdated(_:)), name: RegionalAlertsManager.regionalAlertsUpdatedNotification, object: nil)
+    }
+
+    fileprivate func unregisterRegionalAlertNotifications() {
+        NotificationCenter.default.removeObserver(self, name: RegionalAlertsManager.regionalAlertsUpdatedNotification, object: nil)
+    }
+
+    @objc func regionalAlertsUpdated(_ note: Notification) {
+        regionalAlerts = Array(regionalAlertsManager.regionalAlerts.filter { $0.publishedAt != nil }.prefix(3))
+    }
+}
+
 // MARK: - ListAdapterDataSource
 extension MapTableViewController: ListAdapterDataSource {
     func objects(for listAdapter: ListAdapter) -> [ListDiffable] {
@@ -175,9 +214,15 @@ extension MapTableViewController: ListAdapterDataSource {
         var sections: [ListDiffable] = []
 
         // Forecast
-
         if let forecast = weatherForecast {
             sections.append(forecast)
+        }
+
+        let r = regionalAlerts
+
+        if r.count > 0 {
+            print(r)
+            sections.append(contentsOf: r)
         }
 
         // Recent Stops
@@ -220,6 +265,7 @@ extension MapTableViewController: ListAdapterDataSource {
         switch object {
         case is LoadingSection: return LoadingSectionController()
         case is OfflineSection: return OfflineSectionController()
+        case is OBARegionalAlert: return RegionalAlertSectionController()
         case is SectionHeader: return SectionHeaderSectionController()
         case is StopViewModel: return StopSectionController()
         case is Sweep: return BottomSweepSectionController()

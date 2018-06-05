@@ -7,6 +7,7 @@
 //
 
 #import <OBAKit/OBARegionalAlert.h>
+#import <OBAKit/OBAMacros.h>
 
 @implementation OBARegionalAlert
 
@@ -59,7 +60,7 @@
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         dateFormatter = [[NSDateFormatter alloc] init];
-        dateFormatter.dateFormat = @"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
+        dateFormatter.dateFormat = @"yyyy-MM-dd'T'HH:mm:ss'Z'";
     });
 
     return [MTLValueTransformer transformerUsingForwardBlock:^id(NSString *dateString, BOOL *success, NSError *__autoreleasing *error) {
@@ -67,6 +68,60 @@
     } reverseBlock:^id(NSDate *date, BOOL *success, NSError *__autoreleasing *error) {
         return [dateFormatter stringFromDate:date];
     }];
+}
+
+#pragma mark - IGListDiffable
+
+- (nonnull id<NSObject>)diffIdentifier {
+    return [NSString stringWithFormat:@"%@", @(self.identifier)];
+}
+
+- (BOOL)isEqualToDiffableObject:(nullable OBARegionalAlert<IGListDiffable>*)object {
+    OBAGuard([object isKindOfClass:OBARegionalAlert.class]) else {
+        return NO;
+    }
+
+    if (self.unread != object.unread) {
+        return NO;
+    }
+
+    if (self.identifier != object.identifier) {
+        return NO;
+    }
+
+    if (![self.title isEqual:object.title]) {
+        return NO;
+    }
+
+    if (![self.feedName isEqual:object.feedName]) {
+        return NO;
+    }
+
+    if (self.priority != object.priority) {
+        return NO;
+    }
+
+    if (![self.summary isEqual:object.summary]) {
+        return NO;
+    }
+
+    if (![self.URL isEqual:object.URL]) {
+        return NO;
+    }
+
+    if (self.alertFeedID != object.alertFeedID) {
+        return NO;
+    }
+
+    if (![self.publishedAt isEqual:object.publishedAt]) {
+        return NO;
+    }
+
+    if (![self.externalID isEqual:object.externalID]) {
+        return NO;
+    }
+
+    return YES;
 }
 
 @end

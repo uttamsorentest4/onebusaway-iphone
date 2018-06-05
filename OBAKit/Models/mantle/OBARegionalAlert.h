@@ -8,6 +8,7 @@
 
 @import Foundation;
 @import Mantle;
+@import IGListKit;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -16,7 +17,7 @@ typedef NS_ENUM(NSUInteger, OBARegionalAlertPriority) {
     OBARegionalAlertPriorityHigh
 };
 
-@interface OBARegionalAlert : MTLModel <MTLJSONSerializing>
+@interface OBARegionalAlert : MTLModel <MTLJSONSerializing, IGListDiffable>
 @property(nonatomic,assign) BOOL unread;
 @property(nonatomic,assign) NSUInteger identifier;
 @property(nonatomic,copy) NSString *title;

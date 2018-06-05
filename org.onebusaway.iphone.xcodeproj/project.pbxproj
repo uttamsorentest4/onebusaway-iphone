@@ -18,6 +18,8 @@
 		930AFE991DD11EF90092AE82 /* OBAWalkableCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 930AFE981DD11EF90092AE82 /* OBAWalkableCell.m */; };
 		930CE4DB1E9BFB590073F04D /* UserDefaultsBrowserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 930CE4DA1E9BFB590073F04D /* UserDefaultsBrowserViewController.swift */; };
 		930E41A21E5ECAA60040CEB5 /* MapSearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 930E41A11E5ECAA60040CEB5 /* MapSearchViewController.swift */; };
+		930EFFCF20C5CC0200A2AE1F /* RegionalAlertSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 930EFFCE20C5CC0200A2AE1F /* RegionalAlertSection.swift */; };
+		930EFFD320C6088300A2AE1F /* alert_feed_items.json in Resources */ = {isa = PBXBuildFile; fileRef = 930EFFD220C6088300A2AE1F /* alert_feed_items.json */; };
 		931A6A291E03EAA100131242 /* OBATimelineBarRow.m in Sources */ = {isa = PBXBuildFile; fileRef = 931A6A281E03EAA100131242 /* OBATimelineBarRow.m */; };
 		931A6A2D1E03EAAE00131242 /* OBATimelineBarCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 931A6A2C1E03EAAE00131242 /* OBATimelineBarCell.m */; };
 		931AEE21204B70060054E448 /* TodayRefreshView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 931AEE20204B70060054E448 /* TodayRefreshView.swift */; };
@@ -306,6 +308,8 @@
 		930AFE981DD11EF90092AE82 /* OBAWalkableCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OBAWalkableCell.m; sourceTree = "<group>"; };
 		930CE4DA1E9BFB590073F04D /* UserDefaultsBrowserViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserDefaultsBrowserViewController.swift; sourceTree = "<group>"; };
 		930E41A11E5ECAA60040CEB5 /* MapSearchViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapSearchViewController.swift; sourceTree = "<group>"; };
+		930EFFCE20C5CC0200A2AE1F /* RegionalAlertSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegionalAlertSection.swift; sourceTree = "<group>"; };
+		930EFFD220C6088300A2AE1F /* alert_feed_items.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = alert_feed_items.json; sourceTree = "<group>"; };
 		931A6A271E03EAA100131242 /* OBATimelineBarRow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OBATimelineBarRow.h; sourceTree = "<group>"; };
 		931A6A281E03EAA100131242 /* OBATimelineBarRow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OBATimelineBarRow.m; sourceTree = "<group>"; };
 		931A6A2B1E03EAAE00131242 /* OBATimelineBarCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OBATimelineBarCell.h; sourceTree = "<group>"; };
@@ -742,6 +746,14 @@
 				930CE4DA1E9BFB590073F04D /* UserDefaultsBrowserViewController.swift */,
 			);
 			path = debugging;
+			sourceTree = "<group>";
+		};
+		930EFFD120C6083000A2AE1F /* Alerts */ = {
+			isa = PBXGroup;
+			children = (
+				930EFFD220C6088300A2AE1F /* alert_feed_items.json */,
+			);
+			path = Alerts;
 			sourceTree = "<group>";
 		};
 		9327DEF51E023BB900502F06 /* table_cells */ = {
@@ -1188,6 +1200,7 @@
 		934198451DB0C218004BBBB7 /* Fixtures */ = {
 			isa = PBXGroup;
 			children = (
+				930EFFD120C6083000A2AE1F /* Alerts */,
 				93EFFFAD20B938F000B84DF4 /* RecentStops */,
 				93EBB9BE20B289F700B31DA8 /* Weather */,
 				934198461DB0C218004BBBB7 /* Bookmarks */,
@@ -1334,6 +1347,7 @@
 				93D5480420B778F700334939 /* SectionHeaderCell.swift */,
 				93F1C25F20BCD34B00B5032B /* LoadingCell.swift */,
 				93F1C26220BCDCCF00B5032B /* OfflineSection.swift */,
+				930EFFCE20C5CC0200A2AE1F /* RegionalAlertSection.swift */,
 			);
 			path = listkit;
 			sourceTree = "<group>";
@@ -1711,6 +1725,7 @@
 				934198891DB0C219004BBBB7 /* testMessageBodyForModelDAO.html in Resources */,
 				93EFFFB020B938F100B84DF4 /* RecentStopWithStopIDs.plist in Resources */,
 				934198861DB0C219004BBBB7 /* bookmark_with_region_identifier.plist in Resources */,
+				930EFFD320C6088300A2AE1F /* alert_feed_items.json in Resources */,
 				934198871DB0C219004BBBB7 /* bookmark_with_stopids_array.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1842,6 +1857,7 @@
 				934197A21DB0C140004BBBB7 /* OBASwitchRow.m in Sources */,
 				933546E11E834BB000D83519 /* OBAMessageCell.m in Sources */,
 				934196E61DB0C124004BBBB7 /* UIViewController+OBAAnalytics.m in Sources */,
+				930EFFCF20C5CC0200A2AE1F /* RegionalAlertSection.swift in Sources */,
 				9341977E1DB0C140004BBBB7 /* OBAAlerts.m in Sources */,
 				930E41A21E5ECAA60040CEB5 /* MapSearchViewController.swift in Sources */,
 				931A6A2D1E03EAAE00131242 /* OBATimelineBarCell.m in Sources */,
